@@ -6,7 +6,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gharkharcha.R
 import com.gharkharcha.data.entity.WorkEntity
+import com.gharkharcha.data.entity.LabourerEntity
+import com.gharkharcha.data.entity.PaymentEntity
+import com.gharkharcha.data.repo.LabourerRepository
+import com.gharkharcha.data.repo.LedgerRepository
+import com.gharkharcha.data.repo.PaymentRepository
 import com.gharkharcha.data.repo.WorkRepository
+import com.gharkharcha.domain.model.LabourSummary
+import kotlinx.coroutines.flow.combine
 import com.gharkharcha.domain.model.WorkWithSpend
 import com.gharkharcha.ui.common.LoadState
 import com.gharkharcha.ui.common.UiText
@@ -21,11 +28,19 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+/** One labourer's totals on this work. */
+data class WorkLabourRow(val labourer: LabourerEntity, val summary: LabourSummary)
+
+data class WorkPaymentRow(val payment: PaymentEntity, val labourerName: String)
+
 @HiltViewModel
 class WorkDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val works: WorkRepository,
     private val undo: UndoDeleteManager,
+    labourers: LabourerRepository,
+    ledger: LedgerRepository,
+    payments: PaymentRepository,
 ) : ViewModel() {
     private val workId = savedStateHandle.toRoute<WorkDetailRoute>().workId
     private val retry = MutableStateFlow(0)
@@ -33,6 +48,21 @@ class WorkDetailViewModel @Inject constructor(
     /** Ready(null) means the work doesn't exist (deleted elsewhere). */
     val state: StateFlow<LoadState<WorkWithSpend?>> = retryableLoad(retry) { works.observeOneWithSpend(workId) }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LoadState.Loading)
+
+    /** Labourers who worked on this work, most earned first. */
+    val labour: StateFlow<List<WorkLabourRow>> =
+        combine(labourers.observeAll(), ledger.observeSummaries(workId = workId)) { people, summaries ->
+            people.mapNotNull { p -> summaries[p.id]?.let { WorkLabourRow(p, it) } }
+                .filter { it.summary.earnedPaise > 0 || it.summary.dayHundredths > 0 }
+                .sortedByDescending { it.summary.earnedPaise }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val payments: StateFlow<List<WorkPaymentRow>> =
+        combine(payments.observeForWork(workId), labourers.observeAll(), undo.pending) { list, people, pending ->
+            val names = people.associate { it.id to it.name }
+            list.filter { UndoDeleteManager.paymentKey(it.id) !in pending }
+                .map { WorkPaymentRow(it, names[it.labourerId].orEmpty()) }
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     fun retry() = retry.update { it + 1 }
 

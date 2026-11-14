@@ -59,9 +59,14 @@ private enum class WorkTab(@param:StringRes val title: Int) {
 fun WorkDetailScreen(
     onBack: () -> Unit,
     onEdit: (WorkEntity) -> Unit,
+    onMarkAttendance: (workId: Long) -> Unit,
+    onOpenLabourer: (Long) -> Unit,
+    onOpenPayment: (labourerId: Long, paymentId: Long) -> Unit,
     viewModel: WorkDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val labour by viewModel.labour.collectAsStateWithLifecycle()
+    val payments by viewModel.payments.collectAsStateWithLifecycle()
     val item = (state as? LoadState.Ready)?.data
     var tab by rememberSaveable { mutableIntStateOf(0) }
     var confirmDelete by rememberSaveable { mutableStateOf(false) }
@@ -111,16 +116,13 @@ fun WorkDetailScreen(
                         title = stringResource(R.string.materials_empty_title),
                         message = stringResource(R.string.materials_empty_message),
                     )
-                    WorkTab.LABOUR -> EmptyState(
-                        icon = R.drawable.ic_groups,
-                        title = stringResource(R.string.labour_empty_title),
-                        message = stringResource(R.string.labour_empty_message),
+                    WorkTab.LABOUR -> WorkLabourTab(
+                        totalPaise = data.totals.labourPaise,
+                        rows = labour,
+                        onMarkAttendance = { onMarkAttendance(data.work.id) },
+                        onOpenLabourer = onOpenLabourer,
                     )
-                    WorkTab.PAYMENTS -> EmptyState(
-                        icon = R.drawable.ic_wallet,
-                        title = stringResource(R.string.payments_empty_title),
-                        message = stringResource(R.string.payments_empty_message),
-                    )
+                    WorkTab.PAYMENTS -> WorkPaymentsTab(payments, onOpenPayment)
                     WorkTab.PHOTOS -> EmptyState(
                         icon = R.drawable.ic_photo,
                         title = stringResource(R.string.photos_empty_title),

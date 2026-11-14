@@ -141,6 +141,7 @@ class WorkEditViewModel @Inject constructor(
             flags.update { it.copy(showErrors = true) }
             return
         }
+        if (flags.value.saving) return // ignore double taps
         flags.update { it.copy(saving = true, saveFailed = false) }
         viewModelScope.launch {
             try {
@@ -156,7 +157,8 @@ class WorkEditViewModel @Inject constructor(
                         notes = f.notes.trim(),
                     ),
                 )
-                flags.update { it.copy(saving = false, saved = true) }
+                // Stay "saving" so the button can't be pressed again before the screen closes.
+                flags.update { it.copy(saved = true) }
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {

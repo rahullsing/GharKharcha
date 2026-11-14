@@ -65,4 +65,12 @@ class AttendanceRepository @Inject constructor(
         }
         toInsert.size
     }
+
+    /** Bulk add: repeats [from]'s entries on every date in [dates] (skipping [from] itself). */
+    suspend fun repeatDay(workId: Long, from: LocalDate, dates: List<LocalDate>): Int = db.withTransaction {
+        dates.filter { it != from }.sumOf { copyDay(workId, from, it) }
+    }
+
+    suspend fun listForWorkOnDate(workId: Long, date: LocalDate): List<AttendanceEntity> =
+        dao.listForWorkOnDate(workId, date)
 }

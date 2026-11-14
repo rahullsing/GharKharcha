@@ -14,11 +14,15 @@ object DateFormats {
     private val display = DateTimeFormatter.ofPattern("dd-MMM-yyyy", LOCALE)
     private val month = DateTimeFormatter.ofPattern("MMM yyyy", LOCALE)
     private val dayShort = DateTimeFormatter.ofPattern("dd MMM", LOCALE)
+    private val compact = DateTimeFormatter.ofPattern("dd MMM yy", LOCALE)
     private val fileStamp = DateTimeFormatter.ofPattern("yyyyMMdd-HHmm", LOCALE)
 
     fun format(date: LocalDate): String = display.format(date)
     fun format(month: YearMonth): String = this.month.format(month)
     fun formatShort(date: LocalDate): String = dayShort.format(date)
+
+    /** For narrow table columns: 14 Nov 26. */
+    fun formatCompact(date: LocalDate): String = compact.format(date)
 
     fun formatEpochMillis(millis: Long, zone: ZoneId = ZoneId.systemDefault()): String =
         display.format(Instant.ofEpochMilli(millis).atZone(zone).toLocalDate())

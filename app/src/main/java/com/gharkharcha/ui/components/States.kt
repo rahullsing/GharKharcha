@@ -32,7 +32,10 @@ import com.gharkharcha.R
 import com.gharkharcha.ui.common.LoadState
 import com.gharkharcha.ui.theme.Dimens
 
-/** Friendly empty state: icon, title, one line of help and an optional primary action. */
+/**
+ * Friendly empty state: icon, title, one line of help and an optional primary action.
+ * Use [inline] = true inside a LazyColumn item (a nested vertical scroll would crash there).
+ */
 @Composable
 fun EmptyState(
     @DrawableRes icon: Int,
@@ -41,9 +44,11 @@ fun EmptyState(
     modifier: Modifier = Modifier,
     actionLabel: String? = null,
     onAction: (() -> Unit)? = null,
+    inline: Boolean = false,
 ) {
+    val container = if (inline) modifier.padding(32.dp) else modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(32.dp)
     Box(
-        modifier = modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(32.dp),
+        modifier = container,
         contentAlignment = Alignment.Center,
     ) {
         Column(

@@ -3,9 +3,15 @@ package com.gharkharcha.ui.components
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DateRangePicker
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -162,6 +168,70 @@ fun DateField(
             DatePicker(state = state)
         }
     }
+}
+
+/** Material date picker dialog; future dates are disabled when [pastOnly]. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PickDateDialog(
+    initial: LocalDate,
+    onPick: (LocalDate) -> Unit,
+    onDismiss: () -> Unit,
+    pastOnly: Boolean = true,
+) {
+    val state = rememberDatePickerState(
+        initialSelectedDateMillis = initial.toUtcMillis(),
+        selectableDates = if (pastOnly) PastOrToday else DatePickerDefaults.AllDates,
+    )
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                state.selectedDateMillis?.let { onPick(utcMillisToLocalDate(it)) }
+                onDismiss()
+            }) { Text(stringResource(R.string.action_ok)) }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+    ) {
+        DatePicker(state = state)
+    }
+}
+
+/** Date range picker (inclusive); future dates disabled. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PickDateRangeDialog(
+    title: String,
+    onPick: (start: LocalDate, end: LocalDate) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    val state = rememberDateRangePickerState(selectableDates = PastOrToday)
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                enabled = state.selectedStartDateMillis != null,
+                onClick = {
+                    val start = state.selectedStartDateMillis ?: return@TextButton
+                    val end = state.selectedEndDateMillis ?: start
+                    onPick(utcMillisToLocalDate(start), utcMillisToLocalDate(end))
+                    onDismiss()
+                },
+            ) { Text(stringResource(R.string.action_ok)) }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
+    ) {
+        DateRangePicker(
+            state = state,
+            title = { Text(title, modifier = Modifier.padding(start = 24.dp, top = 16.dp)) },
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+private object PastOrToday : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long): Boolean = utcTimeMillis <= LocalDate.now().toUtcMillis()
 }
 
 /** Dropdown picker for a fixed list of options. */

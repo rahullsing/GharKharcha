@@ -26,7 +26,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.gharkharcha.R
-import com.gharkharcha.ui.common.UiText
 import com.gharkharcha.ui.components.LocalSnackbarHostState
 import com.gharkharcha.ui.navigation.AppNavHost
 import com.gharkharcha.ui.navigation.TopLevelDestination
@@ -46,10 +45,7 @@ fun GharKharchaAppUi(
     // Undo-delete snackbars, one at a time.
     LaunchedEffect(viewModel) {
         viewModel.undoRequests.collect { request ->
-            val message = when (val text = request.message) {
-                is UiText.Raw -> text.value
-                is UiText.Res -> resources.getString(text.id, *text.args.toTypedArray())
-            }
+            val message = request.message.asString(resources)
             val result = snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = undoLabel,

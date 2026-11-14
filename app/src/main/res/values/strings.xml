@@ -144,7 +144,147 @@
     <!-- Labour tab placeholder -->
     <string name="labourers_title">Labourers</string>
     <string name="labourers_empty_title">No labourers yet</string>
-    <string name="labourers_empty_message">Your labourers, their attendance and dues will appear here.</string>
+    <string name="labourers_empty_message">Add your labourers once, then mark their attendance every day.</string>
+    <string name="labourer_add">Add labourer</string>
+    <string name="labourer_new">New labourer</string>
+    <string name="labourer_edit">Edit labourer</string>
+    <string name="labourer_name">Name</string>
+    <string name="labourer_phone">Phone</string>
+    <string name="labourer_skill">Skill</string>
+    <string name="labourer_custom_skill">Skill name</string>
+    <string name="labourer_daily_wage">Daily wage</string>
+    <string name="labourer_hourly_rate">Hourly rate</string>
+    <string name="labourer_wage_hint">Used to fill in pay automatically</string>
+    <string name="labourer_address">Address</string>
+    <string name="labourer_id_notes">ID notes</string>
+    <string name="labourer_id_notes_hint">e.g. Aadhaar last 4 digits</string>
+    <string name="labourer_active">Active</string>
+    <string name="labourer_active_hint">Inactive labourers are hidden from the attendance sheet</string>
+    <string name="labourer_per_day">%1$s/day</string>
+    <string name="labourer_per_hour">%1$s/hour</string>
+    <string name="labourers_search">Search labourers</string>
+    <string name="filter_all">All</string>
+    <string name="filter_inactive">Inactive</string>
+    <string name="labourers_no_match">No labourers match. Try a different name or filter.</string>
+    <string name="labourer_inactive_tag">Inactive</string>
+    <string name="balance_due">Due</string>
+    <string name="balance_advance">Advance</string>
+    <string name="balance_settled">Settled</string>
+    <string name="labourers_total_due">Total due to labourers: %1$s</string>
+    <string name="attendance_card_title">Daily attendance</string>
+    <string name="attendance_card_message">Mark who worked today in one tap.</string>
+    <string name="attendance_mark">Mark attendance</string>
+    <string name="labourer_call">Call</string>
+    <string name="labourer_whatsapp">WhatsApp</string>
+    <string name="no_app_found">No app found for this action</string>
+    <string name="labourer_mark_inactive">Mark inactive</string>
+    <string name="labourer_mark_active">Mark active</string>
+    <string name="labourer_delete_title">Delete this labourer?</string>
+    <string name="labourer_delete_message">\"%1$s\" will be removed from your list.</string>
+    <string name="labourer_deleted">\"%1$s\" deleted</string>
+    <string name="labourer_has_history_title">Can\'t delete</string>
+    <string name="labourer_has_history_message">\"%1$s\" has attendance or payment records. Mark them inactive instead to hide them from the attendance sheet.</string>
+
+    <!-- Skills -->
+    <string name="skill_electrician">Electrician</string>
+    <string name="skill_brick_mason">Brick mason</string>
+    <string name="skill_helper">Helper</string>
+    <string name="skill_plumber">Plumber</string>
+    <string name="skill_carpenter">Carpenter</string>
+    <string name="skill_painter">Painter</string>
+    <string name="skill_tile_fitter">Tile fitter</string>
+    <string name="skill_welder">Welder</string>
+    <string name="skill_custom">Other</string>
+
+    <!-- Attendance -->
+    <string name="attendance_title">Attendance</string>
+    <string name="attendance_today">Today</string>
+    <string name="attendance_yesterday">Yesterday</string>
+    <string name="date_with_label">%1$s · %2$s</string>
+    <string name="attendance_prev_day">Previous day</string>
+    <string name="attendance_next_day">Next day</string>
+    <string name="attendance_work">Work</string>
+    <string name="attendance_full">Full</string>
+    <string name="attendance_half">Half</string>
+    <string name="attendance_hours">Hours</string>
+    <string name="attendance_absent">Absent</string>
+    <string name="attendance_copy_previous">Copy previous day</string>
+    <plurals name="attendance_copied">
+        <item quantity="one">%1$d entry copied</item>
+        <item quantity="other">%1$d entries copied</item>
+    </plurals>
+    <string name="attendance_nothing_to_copy">Nothing new to copy from the previous day</string>
+    <string name="attendance_copy_range">Repeat this day for other dates</string>
+    <string name="attendance_copy_range_title">Repeat for dates</string>
+    <plurals name="attendance_range_done">
+        <item quantity="one">%1$d entry added</item>
+        <item quantity="other">%1$d entries added</item>
+    </plurals>
+    <string name="attendance_range_empty">Mark attendance for this day first</string>
+    <string name="attendance_range_nothing">Those dates are already marked</string>
+    <string name="attendance_day_total">Day total</string>
+    <plurals name="attendance_present_count">
+        <item quantity="one">%1$d present</item>
+        <item quantity="other">%1$d present</item>
+    </plurals>
+    <string name="attendance_more_details">More details for %1$s</string>
+    <string name="attendance_no_works_title">Add a work first</string>
+    <string name="attendance_no_works_message">Attendance is recorded against a work such as Electrical or Plumbing. Add one from the Works tab.</string>
+    <string name="attendance_no_labourers_message">Add labourers to mark their attendance.</string>
+    <string name="attendance_hours_worked">Hours worked</string>
+    <string name="attendance_hours_required">Enter the hours worked</string>
+    <string name="attendance_rate_type">Pay by</string>
+    <string name="rate_daily">Day</string>
+    <string name="rate_hourly">Hour</string>
+    <string name="attendance_pay">Today\'s pay</string>
+    <string name="attendance_pay_auto">Calculated automatically. Type to change it.</string>
+    <string name="attendance_pay_reset">Reset</string>
+    <string name="attendance_ot_hours">Overtime hours</string>
+    <string name="attendance_ot_rate">Overtime rate/hour</string>
+    <string name="attendance_advance">Advance given today</string>
+    <string name="attendance_total">Total for the day</string>
+    <string name="attendance_clear">Clear</string>
+    <string name="attendance_ot_note">+%1$s h overtime</string>
+    <string name="attendance_advance_note">Advance %1$s</string>
+    <string name="attendance_hours_note">%1$s h</string>
+
+    <!-- Labourer ledger -->
+    <string name="ledger_col_date">Date</string>
+    <string name="ledger_col_work">Work</string>
+    <string name="ledger_col_hours">Hours</string>
+    <string name="ledger_col_pay">Pay</string>
+    <string name="ledger_col_paid">Paid</string>
+    <string name="ledger_days">Days</string>
+    <string name="ledger_earned">Earned</string>
+    <string name="ledger_paid">Paid</string>
+    <string name="ledger_pending">Pending</string>
+    <string name="ledger_settle_up">Settle up %1$s</string>
+    <string name="ledger_add_payment">Add payment</string>
+    <string name="ledger_empty">No records yet. Attendance and payments for this labourer will appear here.</string>
+    <string name="ledger_absent">%1$s (absent)</string>
+    <string name="ledger_days_hours">%1$s days · %2$s h</string>
+
+    <!-- Payments -->
+    <string name="payment_new">New payment</string>
+    <string name="payment_edit">Edit payment</string>
+    <string name="payment_to">To %1$s</string>
+    <string name="payment_amount">Amount</string>
+    <string name="payment_type">Type</string>
+    <string name="payment_type_wage">Wages</string>
+    <string name="payment_type_advance">Advance</string>
+    <string name="payment_mode">Paid by</string>
+    <string name="payment_mode_cash">Cash</string>
+    <string name="payment_mode_upi">UPI</string>
+    <string name="payment_mode_bank">Bank</string>
+    <string name="payment_mode_cheque">Cheque</string>
+    <string name="payment_date">Date</string>
+    <string name="payment_reference">Reference / UTR number</string>
+    <string name="payment_work">For work</string>
+    <string name="payment_work_none">Not linked to a work</string>
+    <string name="payment_delete_title">Delete this payment?</string>
+    <string name="payment_delete_message">It will be removed from the labourer\'s ledger.</string>
+    <string name="payment_deleted">Payment deleted</string>
+    <string name="field_amount_required">Enter an amount</string>
 
     <!-- More -->
     <string name="more_title">More</string>

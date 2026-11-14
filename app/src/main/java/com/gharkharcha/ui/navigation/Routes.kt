@@ -19,6 +19,20 @@ import kotlinx.serialization.Serializable
 @Serializable data class WorkDetailRoute(val workId: Long)
 @Serializable data class WorkEditRoute(val projectId: Long, val workId: Long = 0)
 
+// Labour
+@Serializable data class LabourerEditRoute(val labourerId: Long = 0)
+@Serializable data class LabourerLedgerRoute(val labourerId: Long)
+
+/** [workId] 0 = pick a default work; [epochDay] null = today. */
+@Serializable data class AttendanceRoute(val workId: Long = 0, val epochDay: Long? = null)
+
+/** [prefillPaise] > 0 pre-fills the amount ("Settle up"). */
+@Serializable data class PaymentEditRoute(
+    val labourerId: Long,
+    val paymentId: Long = 0,
+    val prefillPaise: Long = 0,
+)
+
 enum class TopLevelDestination(
     val route: Any,
     @param:DrawableRes val icon: Int,

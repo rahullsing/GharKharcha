@@ -59,5 +59,7 @@ class UndoDeleteManager @Inject constructor(
     companion object {
         fun projectKey(id: Long) = "project:$id"
         fun workKey(id: Long) = "work:$id"
+        fun labourerKey(id: Long) = "labourer:$id"
+        fun paymentKey(id: Long) = "payment:$id"
     }
 }

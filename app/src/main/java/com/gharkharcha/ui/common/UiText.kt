@@ -1,19 +1,20 @@
 package com.gharkharcha.ui.common
 
+import android.content.res.Resources
+import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.res.stringResource
 
-/** Text that ViewModels can produce without a Context; resolved in Compose. */
+/** Text that ViewModels can produce without a Context; resolved by the UI. */
 @Immutable
 sealed interface UiText {
     data class Res(@param:StringRes val id: Int, val args: List<Any> = emptyList()) : UiText
+    data class Plural(@param:PluralsRes val id: Int, val count: Int) : UiText
     data class Raw(val value: String) : UiText
 
-    @Composable
-    fun resolve(): String = when (this) {
-        is Res -> stringResource(id, *args.toTypedArray())
+    fun asString(resources: Resources): String = when (this) {
+        is Res -> resources.getString(id, *args.toTypedArray())
+        is Plural -> resources.getQuantityString(id, count, count)
         is Raw -> value
     }
 

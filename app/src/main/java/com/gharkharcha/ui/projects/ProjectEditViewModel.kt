@@ -122,6 +122,7 @@ class ProjectEditViewModel @Inject constructor(
             flags.update { it.copy(showErrors = true) }
             return
         }
+        if (flags.value.saving) return // ignore double taps
         flags.update { it.copy(saving = true, saveFailed = false) }
         viewModelScope.launch {
             try {
@@ -137,7 +138,8 @@ class ProjectEditViewModel @Inject constructor(
                 )
                 // A newly added house becomes the one you're looking at.
                 if (isNew) currentProject.select(id)
-                flags.update { it.copy(saving = false, saved = true) }
+                // Stay "saving" so the button can't be pressed again before the screen closes.
+                flags.update { it.copy(saved = true) }
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {

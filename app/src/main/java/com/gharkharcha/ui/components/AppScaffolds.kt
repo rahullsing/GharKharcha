@@ -39,6 +39,10 @@ fun TopLevelScaffold(
     )
 }
 
+/** For screens with their own bottom footer that already pads for the navigation bar. */
+val FooterContentInsets: WindowInsets
+    @Composable get() = ScaffoldDefaults.contentWindowInsets.only(WindowInsetsSides.Top + WindowInsetsSides.Horizontal)
+
 /** Scaffold for pushed screens (no bottom bar): full system-bar insets. */
 @Composable
 fun DetailScaffold(
