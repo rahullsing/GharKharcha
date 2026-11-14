@@ -31,6 +31,15 @@ interface WorkDao {
     )
     fun observeSpendByWork(projectId: Long): Flow<List<WorkSpendRow>>
 
+    @Query(
+        """
+        SELECT :workId AS workId,
+               COALESCE((SELECT SUM(m.total_paise) FROM materials m WHERE m.work_id = :workId), 0) AS materialPaise,
+               COALESCE((SELECT SUM(a.base_pay_paise + a.overtime_pay_paise) FROM attendance a WHERE a.work_id = :workId), 0) AS labourPaise
+        """,
+    )
+    fun observeSpend(workId: Long): Flow<WorkSpendRow>
+
     @Insert
     suspend fun insert(work: WorkEntity): Long
 

@@ -4,31 +4,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gharkharcha.data.prefs.ThemeMode
+import com.gharkharcha.ui.app.AppViewModel
+import com.gharkharcha.ui.app.GharKharchaAppUi
 import com.gharkharcha.ui.theme.GharKharchaTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    private val appViewModel: AppViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            GharKharchaTheme {
-                // Placeholder until the navigation shell lands in Phase 2.
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
-                        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.headlineMedium)
-                    }
-                }
+            // Until DataStore loads (a few ms) the system theme is used.
+            val prefs by appViewModel.preferences.collectAsStateWithLifecycle()
+            val dark = when (prefs?.themeMode) {
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+                else -> isSystemInDarkTheme()
+            }
+            GharKharchaTheme(darkTheme = dark, dynamicColor = prefs?.dynamicColor ?: true) {
+                GharKharchaAppUi(viewModel = appViewModel)
             }
         }
     }

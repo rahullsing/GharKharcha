@@ -2,8 +2,17 @@ package com.gharkharcha.data.dao
 
 import androidx.room.Embedded
 import com.gharkharcha.data.entity.AttendanceEntity
+import com.gharkharcha.data.entity.ProjectEntity
 import com.gharkharcha.domain.model.AttendanceTotals
 import com.gharkharcha.domain.model.PaymentTotals
+
+/** Project with its work count and spend (projects list). */
+data class ProjectSummaryRow(
+    @Embedded val project: ProjectEntity,
+    val workCount: Int,
+    val materialPaise: Long,
+    val labourPaise: Long,
+)
 
 /** Spend per work, used by work list / project totals. */
 data class WorkSpendRow(

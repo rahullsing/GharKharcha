@@ -1,5 +1,7 @@
 package com.gharkharcha.domain.model
 
+import com.gharkharcha.data.entity.WorkEntity
+
 /** Budget vs actual for a Work or Project. */
 data class SpendTotals(
     val materialPaise: Long,
@@ -40,6 +42,12 @@ data class SpendTotals(
         val ZERO = SpendTotals(0, 0, 0)
     }
 }
+
+/** A work with its live spend. */
+data class WorkWithSpend(
+    val work: WorkEntity,
+    val totals: SpendTotals,
+)
 
 /** Thresholds used for budget alerts: 80% warning, 100% reached. */
 enum class BudgetLevel { NO_BUDGET, OK, WARNING, REACHED, OVER }

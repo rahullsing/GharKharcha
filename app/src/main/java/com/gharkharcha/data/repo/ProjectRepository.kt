@@ -3,6 +3,7 @@ package com.gharkharcha.data.repo
 import androidx.room.withTransaction
 import com.gharkharcha.data.dao.AttachmentDao
 import com.gharkharcha.data.dao.ProjectDao
+import com.gharkharcha.data.dao.ProjectSummaryRow
 import com.gharkharcha.data.db.GharKharchaDatabase
 import com.gharkharcha.data.entity.ProjectEntity
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +20,8 @@ class ProjectRepository @Inject constructor(
     fun observeAll(): Flow<List<ProjectEntity>> = dao.observeAll()
 
     fun observe(id: Long): Flow<ProjectEntity?> = dao.observe(id)
+
+    fun observeSummaries(): Flow<List<ProjectSummaryRow>> = dao.observeSummaries()
 
     suspend fun get(id: Long): ProjectEntity? = dao.get(id)
 
