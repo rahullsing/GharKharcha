@@ -560,4 +560,13 @@
     <string name="settings_restore_confirm_message">This will replace current data with the contents of the backup zip. Make sure you have backed up any recent changes.</string>
     <string name="settings_restore_success">Restore completed! %1$d photos restored.</string>
     <string name="settings_restore_failed">Restore failed: %1$s</string>
+
+    <!-- Phase 9: Demo Data & Polish -->
+    <string name="settings_section_demo">Demo Data</string>
+    <string name="settings_demo_title">Load sample project &amp; data</string>
+    <string name="settings_demo_desc">Add a sample house, 3 works, 4 labourers, materials, and 2 weeks of attendance</string>
+    <string name="settings_demo_action">Load sample data</string>
+    <string name="settings_demo_confirm_title">Load sample data?</string>
+    <string name="settings_demo_confirm_message">This will add a sample house (\"Dream Villa\"), works, labourers, and expenses so you can test all features.</string>
+    <string name="settings_demo_success">Sample data loaded successfully!</string>
 </resources>

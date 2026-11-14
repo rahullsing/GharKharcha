@@ -1,0 +1,568 @@
+<resources>
+    <!-- Navigation -->
+    <string name="nav_home">होम</string>
+    <string name="nav_works">काम</string>
+    <string name="nav_labour">लेबर</string>
+    <string name="nav_more">अन्य</string>
+
+    <!-- Common actions -->
+    <string name="action_save">सहेजें</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_delete">हटाएं</string>
+    <string name="action_edit">बदलें</string>
+    <string name="action_undo">पूर्ववत करें</string>
+    <string name="action_retry">पुनः प्रयास करें</string>
+    <string name="action_back">वापस</string>
+    <string name="action_more_options">अधिक विकल्प</string>
+    <string name="action_clear">साफ़ करें</string>
+    <string name="action_ok">ठीक है</string>
+
+    <!-- Common states -->
+    <string name="state_loading">लोड हो रहा है…</string>
+    <string name="state_error_title">कुछ गड़बड़ हुई</string>
+    <string name="state_error_message">कृपया पुनः प्रयास करें। आपका डेटा सुरक्षित है।</string>
+    <string name="state_not_found">यह आइटम अब मौजूद नहीं है।</string>
+    <string name="coming_soon">जल्द आ रहा है</string>
+
+    <!-- Form -->
+    <string name="field_required">आवश्यक है</string>
+    <string name="field_invalid_amount">मान्य राशि दर्ज करें</string>
+    <string name="field_optional">वैकल्पिक</string>
+    <string name="field_end_before_start">समाप्ति तिथि आरंभ तिथि से पहले है</string>
+    <string name="select_date">तारीख चुनें</string>
+    <string name="no_date">सेट नहीं है</string>
+    <string name="saved">सहेजा गया</string>
+    <string name="save_failed">सहेजा नहीं जा सका। कृपया पुनः प्रयास करें।</string>
+    <string name="discard_changes_title">बदलाव रद्द करें?</string>
+    <string name="discard_changes_message">आपके बदलाव सहेजे नहीं जाएंगे।</string>
+    <string name="action_discard">हटाएं</string>
+    <string name="action_keep_editing">संपादन जारी रखें</string>
+
+    <!-- Money -->
+    <string name="spent">खर्च हुआ</string>
+    <string name="budget">बजट</string>
+    <string name="remaining">बचा हुआ</string>
+    <string name="over_budget_by">बजट से %1$s अधिक</string>
+    <string name="budget_used_percent">%1$d%% बजट इस्तेमाल हुआ</string>
+    <string name="no_budget_set">कोई बजट निर्धारित नहीं</string>
+    <string name="materials">सामग्री</string>
+    <string name="labour">लेबर</string>
+    <string name="grand_total">कुल खर्च</string>
+    <string name="spent_of_budget">%2$s में से %1$s</string>
+    <string name="of_amount">%1$s में से</string>
+
+    <!-- Projects -->
+    <string name="projects_title">मेरे घर</string>
+    <string name="project_add">घर जोड़ें</string>
+    <string name="project_edit">घर में बदलाव करें</string>
+    <string name="project_new">नया घर</string>
+    <string name="project_manage">घर प्रबंधित करें</string>
+    <string name="project_switch">घर बदलें</string>
+    <string name="project_current">वर्तमान</string>
+    <string name="project_name">घर का नाम</string>
+    <string name="project_name_hint">उदा. हमारा नया घर</string>
+    <string name="project_address">पता</string>
+    <string name="project_start_date">आरंभ तिथि</string>
+    <string name="project_total_budget">कुल बजट</string>
+    <string name="notes">नोट्स</string>
+    <string name="project_delete_title">क्या यह घर हटाना चाहते हैं?</string>
+    <string name="project_delete_message">\"%1$s\" के सभी काम, सामग्री, हाज़िरी और फोटो हटा दिए जाएंगे। भुगतान लेबर बहीखाते में रहेंगे।</string>
+    <string name="project_deleted">घर हटा दिया गया</string>
+    <string name="projects_empty_title">अपना पहला घर जोड़ें</string>
+    <string name="projects_empty_message">सामग्री और लेबर पर खर्च हुए हर एक रुपये का कामवार हिसाब रखें।</string>
+    <plurals name="project_works_count">
+        <item quantity="one">%1$d काम</item>
+        <item quantity="other">%1$d काम</item>
+    </plurals>
+
+    <!-- Works -->
+    <string name="works_title">काम</string>
+    <string name="work_add">काम जोड़ें</string>
+    <string name="work_edit">काम बदलें</string>
+    <string name="work_new">नया काम</string>
+    <string name="work_name">काम का नाम</string>
+    <string name="work_name_hint">उदा. बिजली वायरिंग का काम</string>
+    <string name="work_type">प्रकार</string>
+    <string name="work_budget">बजट</string>
+    <string name="work_start_date">आरंभ तिथि</string>
+    <string name="work_end_date">समाप्ति तिथि</string>
+    <string name="work_status">स्थिति</string>
+    <string name="work_delete_title">क्या यह काम हटाना चाहते हैं?</string>
+    <string name="work_delete_message">\"%1$s\" की सामग्री, हाज़िरी और फोटो हटा दिए जाएंगे। भुगतान लेबर बहीखाते में रहेंगे।</string>
+    <string name="work_deleted">\"%1$s\" हटा दिया गया</string>
+    <string name="works_empty_title">अभी कोई काम नहीं जोड़ा गया</string>
+    <string name="works_empty_message">खर्च ट्रैक करने के लिए बिजली, प्लंबिंग या पेंटिंग जैसा कोई काम जोड़ें।</string>
+    <string name="work_dates">%1$s – %2$s</string>
+    <string name="work_started_on">%1$s को शुरू हुआ</string>
+
+    <!-- Work detail tabs -->
+    <string name="tab_summary">सारांश</string>
+    <string name="tab_materials">सामग्री</string>
+    <string name="tab_labour">लेबर</string>
+    <string name="tab_payments">भुगतान</string>
+    <string name="tab_photos">फोटो</string>
+    <string name="work_details">विवरण</string>
+    <string name="materials_empty_title">अभी कोई सामग्री नहीं है</string>
+    <string name="materials_empty_message">इस काम के लिए खरीदी गई सामग्री यहाँ दिखाई देगी।</string>
+    <string name="labour_empty_title">अभी कोई हाज़िरी नहीं है</string>
+    <string name="labour_empty_message">इस काम की दैनिक हाज़िरी और मज़दूरी यहाँ दिखाई देगी।</string>
+    <string name="payments_empty_title">अभी कोई भुगतान नहीं हुआ</string>
+    <string name="payments_empty_message">इस काम के लिए मज़दूरों को किया गया भुगतान यहाँ दिखाई देगा।</string>
+    <string name="photos_empty_title">अभी कोई फोटो नहीं है</string>
+    <string name="photos_empty_message">इस काम में जोड़े गए बिल और फोटो यहाँ दिखाई देंगे।</string>
+
+    <!-- Work types -->
+    <string name="work_type_electrical">बिजली (इलेक्ट्रिकल)</string>
+    <string name="work_type_plumbing">नल-फिटिंग (प्लंबिंग)</string>
+    <string name="work_type_brick_masonry">चिनाई और प्लास्टर</string>
+    <string name="work_type_painting">पेंटिंग</string>
+    <string name="work_type_tiling">टाइल्स</string>
+    <string name="work_type_carpentry">बढ़ई (कारपेंट्री)</string>
+    <string name="work_type_custom">अन्य</string>
+    <string name="work_type_default_name_electrical">बिजली का काम</string>
+    <string name="work_type_default_name_plumbing">प्लंबिंग का काम</string>
+    <string name="work_type_default_name_brick_masonry">ईंट चिनाई</string>
+    <string name="work_type_default_name_painting">पेंटिंग का काम</string>
+    <string name="work_type_default_name_tiling">टाइल्स का काम</string>
+    <string name="work_type_default_name_carpentry">बढ़ई का काम</string>
+
+    <!-- Work status -->
+    <string name="work_status_planned">नियोजित</string>
+    <string name="work_status_in_progress">जारी है</string>
+    <string name="work_status_done">पूरा हुआ</string>
+    <string name="work_status_on_hold">रुका हुआ</string>
+
+    <!-- Home -->
+    <string name="home_overview">अवलोकन</string>
+    <string name="home_by_work">कामवार खर्च</string>
+    <string name="home_see_all_works">सभी काम देखें</string>
+
+    <!-- Labour tab -->
+    <string name="labourers_title">लेबर / मज़दूर</string>
+    <string name="labourers_empty_title">अभी कोई मज़दूर नहीं हैं</string>
+    <string name="labourers_empty_message">मज़दूरों को एक बार जोड़ें, फिर रोज़ाना उनकी हाज़िरी लगाएं।</string>
+    <string name="labourer_add">मज़दूर जोड़ें</string>
+    <string name="labourer_new">नया मज़दूर</string>
+    <string name="labourer_edit">मज़दूर विवरण बदलें</string>
+    <string name="labourer_name">नाम</string>
+    <string name="labourer_phone">फ़ोन नंबर</string>
+    <string name="labourer_skill">हुनर (स्किल)</string>
+    <string name="labourer_custom_skill">हुनर का नाम</string>
+    <string name="labourer_daily_wage">दैनिक दिहाड़ी</string>
+    <string name="labourer_hourly_rate">प्रति घंटा दर</string>
+    <string name="labourer_wage_hint">मज़दूरी अपने आप भरने के लिए उपयोग होगा</string>
+    <string name="labourer_address">पता</string>
+    <string name="labourer_id_notes">पहचान पत्र नोट्स</string>
+    <string name="labourer_id_notes_hint">उदा. आधार के अंतिम 4 अंक</string>
+    <string name="labourer_active">सक्रिय</string>
+    <string name="labourer_active_hint">निष्क्रिय मज़दूर हाज़िरी शीट से छिप जाते हैं</string>
+    <string name="labourer_per_day">%1$s/दिन</string>
+    <string name="labourer_per_hour">%1$s/घंटा</string>
+    <string name="labourers_search">मज़दूर खोजें</string>
+    <string name="filter_all">सभी</string>
+    <string name="filter_inactive">निष्क्रिय</string>
+    <string name="labourers_no_match">कोई मज़दूर नहीं मिला। दूसरा नाम खोजें या फ़िल्टर बदलें।</string>
+    <string name="labourer_inactive_tag">निष्क्रिय</string>
+    <string name="balance_due">देना बाकी</string>
+    <string name="balance_advance">अग्रिम (एडवांस)</string>
+    <string name="balance_settled">हिसाब चुकता</string>
+    <string name="labourers_total_due">मज़दूरों की कुल बकाया राशि: %1$s</string>
+    <string name="attendance_card_title">दैनिक हाज़िरी</string>
+    <string name="attendance_card_message">आज कौन आया, एक टैप में दर्ज करें।</string>
+    <string name="attendance_mark">हाज़िरी लगाएं</string>
+    <string name="labourer_call">कॉल करें</string>
+    <string name="labourer_whatsapp">व्हाट्सएप</string>
+    <string name="no_app_found">इस क्रिया के लिए कोई ऐप नहीं मिला</string>
+    <string name="labourer_mark_inactive">निष्क्रिय करें</string>
+    <string name="labourer_mark_active">सक्रिय करें</string>
+    <string name="labourer_delete_title">क्या यह मज़दूर हटाना चाहते हैं?</string>
+    <string name="labourer_delete_message">\"%1$s\" आपकी सूची से हटा दिए जाएंगे।</string>
+    <string name="labourer_deleted">\"%1$s\" को हटा दिया गया</string>
+    <string name="labourer_has_history_title">हटाया नहीं जा सकता</string>
+    <string name="labourer_has_history_message">\"%1$s\" के हाज़िरी या भुगतान के रिकॉर्ड हैं। हाज़िरी सूची से छिपाने के लिए उन्हें निष्क्रिय चिह्नित करें।</string>
+
+    <!-- Skills -->
+    <string name="skill_electrician">इलेक्ट्रीशियन</string>
+    <string name="skill_brick_mason">राजमिस्त्री</string>
+    <string name="skill_helper">हेल्पर</string>
+    <string name="skill_plumber">प्लंबर</string>
+    <string name="skill_carpenter">बढ़ई</string>
+    <string name="skill_painter">पेंटर</string>
+    <string name="skill_tile_fitter">टाइल्स मिस्त्री</string>
+    <string name="skill_welder">वेल्डर</string>
+    <string name="skill_custom">अन्य</string>
+
+    <!-- Attendance -->
+    <string name="attendance_title">हाज़िरी</string>
+    <string name="attendance_today">आज</string>
+    <string name="attendance_yesterday">कल</string>
+    <string name="date_with_label">%1$s · %2$s</string>
+    <string name="attendance_prev_day">पिछला दिन</string>
+    <string name="attendance_next_day">अगला दिन</string>
+    <string name="attendance_work">काम</string>
+    <string name="attendance_full">पूरी</string>
+    <string name="attendance_half">आधी</string>
+    <string name="attendance_hours">घंटे</string>
+    <string name="attendance_absent">अनुपस्थित</string>
+    <string name="attendance_copy_previous">पिछले दिन की कॉपी करें</string>
+    <plurals name="attendance_copied">
+        <item quantity="one">%1$d प्रविष्टि कॉपी हुई</item>
+        <item quantity="other">%1$d प्रविष्टियां कॉपी हुईं</item>
+    </plurals>
+    <string name="attendance_nothing_to_copy">पिछले दिन से कॉपी करने के लिए कुछ नया नहीं है</string>
+    <string name="attendance_copy_range">अन्य तारीखों के लिए दोहराएं</string>
+    <string name="attendance_copy_range_title">इन तारीखों के लिए दोहराएं</string>
+    <plurals name="attendance_range_done">
+        <item quantity="one">%1$d प्रविष्टि जोड़ी गई</item>
+        <item quantity="other">%1$d प्रविष्टियां जोड़ी गईं</item>
+    </plurals>
+    <string name="attendance_range_empty">पहले इस दिन की हाज़िरी लगाएं</string>
+    <string name="attendance_range_nothing">उन तारीखों की हाज़िरी पहले से दर्ज है</string>
+    <string name="attendance_day_total">आज का कुल</string>
+    <plurals name="attendance_present_count">
+        <item quantity="one">%1$d उपस्थित</item>
+        <item quantity="other">%1$d उपस्थित</item>
+    </plurals>
+    <string name="attendance_more_details">%1$s का अधिक विवरण</string>
+    <string name="attendance_no_works_title">पहले कोई काम जोड़ें</string>
+    <string name="attendance_no_works_message">हाज़िरी बिजली या प्लंबिंग जैसे काम से जुड़ी होती है। काम टैब से एक जोड़ें।</string>
+    <string name="attendance_no_labourers_message">हाज़िरी लगाने के लिए पहले मज़दूर जोड़ें।</string>
+    <string name="attendance_hours_worked">कितने घंटे काम किया</string>
+    <string name="attendance_hours_required">काम के घंटे दर्ज करें</string>
+    <string name="attendance_rate_type">भुगतान का आधार</string>
+    <string name="rate_daily">दैनिक</string>
+    <string name="rate_hourly">प्रति घंटा</string>
+    <string name="attendance_pay">आज की मज़दूरी</string>
+    <string name="attendance_pay_auto">गणना स्वचालित है। बदलने के लिए टाइप करें।</string>
+    <string name="attendance_pay_reset">रीसेट करें</string>
+    <string name="attendance_ot_hours">ओवरटाइम के घंटे</string>
+    <string name="attendance_ot_rate">ओवरटाइम दर/घंटा</string>
+    <string name="attendance_advance">आज दिया गया एडवांस</string>
+    <string name="attendance_total">दिन का कुल</string>
+    <string name="attendance_clear">साफ़ करें</string>
+    <string name="attendance_ot_note">+%1$s घंटे ओवरटाइम</string>
+    <string name="attendance_advance_note">एडवांस %1$s</string>
+    <string name="attendance_hours_note">%1$s घंटे</string>
+
+    <!-- Labourer ledger -->
+    <string name="ledger_col_date">तारीख</string>
+    <string name="ledger_col_work">काम</string>
+    <string name="ledger_col_hours">घंटे</string>
+    <string name="ledger_col_pay">मज़दूरी</string>
+    <string name="ledger_col_paid">भुगतान</string>
+    <string name="ledger_days">दिन</string>
+    <string name="ledger_earned">कमाई</string>
+    <string name="ledger_paid">दिया गया</string>
+    <string name="ledger_pending">बकाया</string>
+    <string name="ledger_settle_up">%1$s का हिसाब चुकता करें</string>
+    <string name="ledger_add_payment">भुगतान जोड़ें</string>
+    <string name="ledger_empty">अभी कोई रिकॉर्ड नहीं है। हाज़िरी और भुगतान यहाँ दिखाई देंगे।</string>
+    <string name="ledger_absent">%1$s (अनुपस्थित)</string>
+    <string name="ledger_days_hours">%1$s दिन · %2$s घंटे</string>
+
+    <!-- Payments -->
+    <string name="payment_new">नया भुगतान</string>
+    <string name="payment_edit">भुगतान बदलें</string>
+    <string name="payment_to">%1$s को</string>
+    <string name="payment_select_labourer">मज़दूर चुनें</string>
+    <string name="payment_amount">राशि</string>
+    <string name="payment_type">प्रकार</string>
+    <string name="payment_type_wage">मज़दूरी</string>
+    <string name="payment_type_advance">अग्रिम (एडवांस)</string>
+    <string name="payment_mode">भुगतान माध्यम</string>
+    <string name="payment_mode_cash">नकद</string>
+    <string name="payment_mode_upi">यूपीआई (UPI)</string>
+    <string name="payment_mode_bank">बैंक ट्रांसफर</string>
+    <string name="payment_mode_cheque">चेक</string>
+    <string name="payment_date">तारीख</string>
+    <string name="payment_reference">रेफ़रेंस / UTR नंबर</string>
+    <string name="payment_period">अवधि</string>
+    <string name="payment_period_hint">वैकल्पिक – उदा. साप्ताहिक मज़दूरी</string>
+    <string name="payment_period_this_week">इस हफ़्ते</string>
+    <string name="payment_period_last_week">पिछले हफ़्ते</string>
+    <string name="payment_period_custom">कस्टम</string>
+    <string name="payment_period_clear">साफ़ करें</string>
+    <string name="payment_period_from">आरंभ तिथि</string>
+    <string name="payment_period_to">समाप्ति तिथि</string>
+    <string name="payment_period_range">%1$s से %2$s</string>
+    <string name="payment_receipts">रसीदें और स्क्रीनशॉट</string>
+    <string name="payment_work">किस काम के लिए</string>
+    <string name="payment_work_none">किसी काम से जुड़ा नहीं है</string>
+    <string name="payment_add">भुगतान जोड़ें</string>
+    <string name="payments_total">कुल भुगतान</string>
+    <string name="payment_delete_title">क्या यह भुगतान हटाना चाहते हैं?</string>
+    <string name="payment_delete_message">यह मज़दूर के बहीखाते से हटा दिया जाएगा।</string>
+    <string name="payment_deleted">भुगतान हटा दिया गया</string>
+    <string name="field_amount_required">राशि दर्ज करें</string>
+
+    <!-- Share into app -->
+    <string name="share_title">शेयर की गई फोटो संलग्न करें</string>
+    <string name="share_title_multiple">%1$d शेयर की गई फोटो संलग्न करें</string>
+    <string name="share_attach_payment">भुगतान में जोड़ें</string>
+    <string name="share_attach_payment_desc">मज़दूर की दिहाड़ी या अग्रिम भुगतान दर्ज करें</string>
+    <string name="share_attach_material">सामग्री में जोड़ें</string>
+    <string name="share_attach_material_desc">काम के लिए खरीद या बिल दर्ज करें</string>
+    <string name="share_select_labourer">मज़दूर चुनें</string>
+    <string name="share_select_work">काम चुनें</string>
+    <string name="share_no_labourers">कोई मज़दूर उपलब्ध नहीं है। पहले एक मज़दूर जोड़ें।</string>
+    <string name="share_no_works">कोई काम उपलब्ध नहीं है। पहले एक काम जोड़ें।</string>
+
+    <!-- Materials -->
+    <string name="material_add">सामग्री जोड़ें</string>
+    <string name="material_new">नई सामग्री</string>
+    <string name="material_edit">सामग्री विवरण बदलें</string>
+    <string name="material_mode_itemised">आइटम विवरण</string>
+    <string name="material_mode_total">केवल कुल राशि</string>
+    <string name="material_item">सामग्री का नाम</string>
+    <string name="material_item_hint">उदा. तार 2.5 वर्ग मिमी</string>
+    <string name="material_item_total_hint">उदा. कच्चा माल</string>
+    <string name="material_brand">ब्रांड</string>
+    <string name="material_qty">मात्रा</string>
+    <string name="material_unit">इकाई (यूनिट)</string>
+    <string name="material_custom_unit">इकाई का नाम</string>
+    <string name="material_rate">प्रति इकाई दर</string>
+    <string name="material_total">कुल</string>
+    <string name="material_total_auto">मात्रा × दर। बदलने के लिए टाइप करें।</string>
+    <string name="material_total_reset">मात्रा × दर का उपयोग करें</string>
+    <string name="material_section_shop">दुकान व बिल</string>
+    <string name="material_shop">दुकान / विक्रेता</string>
+    <string name="material_shop_phone">दुकान का फ़ोन नंबर</string>
+    <string name="material_date">खरीद की तारीख</string>
+    <string name="material_bill_no">बिल नंबर</string>
+    <string name="material_payment_mode">भुगतान माध्यम</string>
+    <string name="material_paid">चुका दिया गया</string>
+    <string name="material_paid_hint">अगर दुकान का बकाया है तो बंद रखें</string>
+    <string name="material_unpaid">बाकी है (उधार)</string>
+    <string name="material_section_photos">फोटो</string>
+    <string name="material_bill_photos">बिल</string>
+    <string name="material_item_photos">सामग्री फोटो</string>
+    <string name="material_duplicate">कॉपी बनाएं</string>
+    <string name="material_duplicated">आज के लिए कॉपी जोड़ी गई</string>
+    <string name="material_deleted">\"%1$s\" हटा दिया गया</string>
+    <string name="material_delete_title">क्या यह सामग्री हटाना चाहते हैं?</string>
+    <string name="material_delete_message">\"%1$s\" और इसकी फोटो हटा दी जाएंगी।</string>
+    <string name="material_qty_rate">%1$s %2$s × %3$s</string>
+    <string name="materials_total">कुल सामग्री खर्च</string>
+    <string name="materials_unpaid_total">दुकानों का बकाया: %1$s</string>
+    <string name="material_item_or_total_required">सामग्री का नाम या कुल राशि दर्ज करें</string>
+
+    <!-- Units -->
+    <string name="unit_metre">मीटर</string>
+    <string name="unit_feet">फीट</string>
+    <string name="unit_kg">किलो</string>
+    <string name="unit_bag">बोरी</string>
+    <string name="unit_piece">नग (पीस)</string>
+    <string name="unit_box">बॉक्स</string>
+    <string name="unit_litre">लीटर</string>
+    <string name="unit_sq_ft">वर्ग फीट</string>
+    <string name="unit_custom">अन्य</string>
+
+    <!-- Material payment modes -->
+    <string name="material_mode_cash">नकद</string>
+    <string name="material_mode_upi">यूपीआई (UPI)</string>
+    <string name="material_mode_card">कार्ड</string>
+    <string name="material_mode_bank">बैंक ट्रांसफर</string>
+    <string name="material_mode_credit">उधार (क्रेडिट)</string>
+
+    <!-- Vendors -->
+    <string name="vendors_title">दुकानें और विक्रेता</string>
+    <string name="more_vendors_subtitle">दुकान के नाम, फ़ोन और GSTIN</string>
+    <string name="vendor_add">दुकान जोड़ें</string>
+    <string name="vendor_new">नई दुकान</string>
+    <string name="vendor_edit">दुकान बदलें</string>
+    <string name="vendor_name">दुकान का नाम</string>
+    <string name="vendor_phone">फ़ोन नंबर</string>
+    <string name="vendor_address">पता</string>
+    <string name="vendor_gstin">GSTIN</string>
+    <string name="vendor_name_taken">इस नाम की दुकान पहले से मौजूद है</string>
+    <string name="vendors_empty_title">अभी कोई दुकान नहीं है</string>
+    <string name="vendors_empty_message">सामग्री जोड़ते समय दुकानें अपने आप जुड़ जाती हैं। आप यहाँ भी जोड़ सकते हैं।</string>
+    <string name="vendor_delete_title">क्या यह दुकान हटाना चाहते हैं?</string>
+    <string name="vendor_delete_message">सामग्रियों में दुकान का नाम रहेगा; केवल सहेजा गया संपर्क हटाया जाएगा।</string>
+
+    <!-- Photos -->
+    <string name="photo_add">फोटो जोड़ें</string>
+    <string name="photo_take">फोटो खींचें</string>
+    <string name="photo_pick">गैलरी से चुनें</string>
+    <string name="photo_remove">फोटो हटाएं</string>
+    <string name="photo_open">फोटो खोलें</string>
+    <string name="photo_change">फोटो बदलें</string>
+    <string name="photo_import_failed">फोटो जोड़ी नहीं जा सकी</string>
+    <string name="photo_caption">कैप्शन</string>
+    <string name="photo_add_caption">कैप्शन जोड़ें</string>
+    <string name="photo_share">शेयर करें</string>
+    <string name="photo_delete_title">क्या यह फोटो हटाना चाहते हैं?</string>
+    <string name="photo_deleted">फोटो हटा दी गई</string>
+    <string name="photo_count">%2$d में से %1$d</string>
+    <string name="photo_zoom_hint">ज़ूम करने के लिए पिंच करें या डबल-टैप करें</string>
+    <string name="photos_title">फोटो</string>
+    <string name="profile_photo">प्रोफ़ाइल फोटो</string>
+    <string name="cover_photo">कवर फोटो</string>
+
+    <!-- Camera -->
+    <string name="camera_title">फोटो खींचें</string>
+    <string name="camera_capture">कैप्चर</string>
+    <string name="camera_permission_title">कैमरा अनुमति चाहिए</string>
+    <string name="camera_permission_message">बिल और सामग्री की फोटो लेने के लिए कैमरा अनुमति दें। कोई भी डेटा आपके फोन से बाहर नहीं जाता।</string>
+    <string name="camera_permission_grant">कैमरा अनुमति दें</string>
+    <string name="camera_permission_settings">सेटिंग्स खोलें</string>
+    <string name="camera_unavailable">इस डिवाइस पर कैमरा उपलब्ध नहीं है</string>
+    <string name="camera_failed">फोटो नहीं खींची जा सकी। कृपया पुनः प्रयास करें।</string>
+
+    <!-- More -->
+    <string name="more_title">अन्य</string>
+    <string name="more_projects_subtitle">घर जोड़ें, बदलें या संपादित करें</string>
+    <string name="more_reports">रिपोर्ट्स</string>
+    <string name="more_reports_subtitle">काम और मज़दूरों के लिए PDF और CSV</string>
+    <string name="more_settings">सेटिंग्स</string>
+    <string name="more_settings_subtitle">थीम, ऐप लॉक, बैकअप और रिमाइंडर</string>
+
+    <!-- Phase 6: Dashboard, charts, breakdown, search -->
+    <string name="home_today_labour">आज की लेबर</string>
+    <string name="home_pending_dues">लेबर बकाया</string>
+    <string name="home_no_dues">कोई बकाया नहीं</string>
+    <string name="home_quick_add">त्वरित जोड़ें</string>
+    <string name="quick_add_material">सामग्री</string>
+    <string name="quick_add_attendance">हाज़िरी</string>
+    <string name="quick_add_payment">भुगतान</string>
+    <string name="chart_donut_title">कामवार खर्च</string>
+    <string name="chart_donut_empty">अभी कोई खर्च दर्ज नहीं है</string>
+    <string name="chart_bars_title">दैनिक खर्च (पिछले 30 दिन)</string>
+    <string name="chart_bars_empty">पिछले 30 दिनों में कोई खर्च नहीं</string>
+    <string name="chart_bars_total">कुल: %1$s</string>
+    <string name="alert_budget_exceeded">बजट से अधिक: %1$s %2$d%% पर है (%4$s में से %3$s)</string>
+    <string name="alert_budget_near">बजट चेतावनी: %1$s %2$d%% तक पहुंच गया है (%4$s में से %3$s)</string>
+    <string name="activity_recent_title">हाल की गतिविधि</string>
+    <string name="activity_empty">कोई हालिया गतिविधि नहीं</string>
+    <string name="activity_material">%1$s · %2$s</string>
+    <string name="activity_attendance">हाज़िरी: %1$s</string>
+    <string name="activity_payment">भुगतान: %1$s (%2$s)</string>
+    <string name="breakdown_title">घर का पूरा विवरण</string>
+    <string name="breakdown_subtitle">काम, श्रेणी, महीना, मज़दूर और दुकान अनुसार</string>
+    <string name="breakdown_view_all">पूरा विवरण देखें</string>
+    <string name="breakdown_tab_work">काम अनुसार</string>
+    <string name="breakdown_tab_category">श्रेणी अनुसार</string>
+    <string name="breakdown_tab_month">महीने अनुसार</string>
+    <string name="breakdown_tab_labourer">मज़दूर अनुसार</string>
+    <string name="breakdown_tab_vendor">दुकान अनुसार</string>
+    <string name="breakdown_category_material">सामग्री</string>
+    <string name="breakdown_category_labour">लेबर</string>
+    <string name="breakdown_category_unpaid">दुकानों का बाकी</string>
+    <string name="breakdown_empty_month">अभी कोई मासिक रिकॉर्ड नहीं है</string>
+    <string name="breakdown_empty_vendor">अभी कोई खरीदारी नहीं है</string>
+    <string name="search_title">खोजें</string>
+    <string name="search_hint">मज़दूर, सामग्री, काम, नोट्स खोजें&#8230;</string>
+    <string name="search_empty">\"%1$s\" के लिए कोई परिणाम नहीं मिला</string>
+    <string name="search_type_work">काम</string>
+    <string name="search_type_labourer">मज़दूर</string>
+    <string name="search_type_material">सामग्री</string>
+    <string name="search_type_payment">भुगतान</string>
+    <string name="search_type_vendor">दुकान</string>
+    <string name="search_section_works">काम (%1$d)</string>
+    <string name="search_section_labourers">मज़दूर (%1$d)</string>
+    <string name="search_section_materials">सामग्री (%1$d)</string>
+    <string name="search_section_payments">भुगतान (%1$d)</string>
+    <string name="search_section_vendors">विक्रेता / दुकानें (%1$d)</string>
+
+    <!-- Phase 7: Reports (PDF + CSV) -->
+    <string name="reports_title">रिपोर्ट और विवरण</string>
+    <string name="report_type">रिपोर्ट का प्रकार</string>
+    <string name="report_type_house">घर का सारांश</string>
+    <string name="report_type_work">काम की रिपोर्ट</string>
+    <string name="report_type_labourer">मज़दूर का हिसाब-किताब</string>
+    <string name="report_format">प्रारूप (फ़ॉर्मेट)</string>
+    <string name="report_format_pdf">PDF दस्तावेज़</string>
+    <string name="report_format_csv">CSV स्प्रेडशीट (Excel)</string>
+    <string name="report_filter_date">तारीख सीमा</string>
+    <string name="report_date_all_time">शुरू से अब तक</string>
+    <string name="report_date_this_month">इस महीने</string>
+    <string name="report_date_last_month">पिछले महीने</string>
+    <string name="report_date_custom">कस्टम तारीख</string>
+    <string name="report_from_date">आरंभ तिथि</string>
+    <string name="report_to_date">समाप्ति तिथि</string>
+    <string name="report_select_work">काम चुनें</string>
+    <string name="report_select_labourer">मज़दूर चुनें</string>
+    <string name="report_include_photos">फोटो परिशिष्ट शामिल करें (बिल व रसीदें)</string>
+    <string name="report_generate_share">रिपोर्ट बनाएं और शेयर करें</string>
+    <string name="report_generating">रिपोर्ट तैयार हो रही है&#8230;</string>
+    <string name="report_saved_and_shared">रिपोर्ट Documents/GharKharcha में सहेजी गई</string>
+    <string name="report_preview_title">रिपोर्ट पूर्वावलोकन</string>
+    <string name="report_preview_house_summary">%1$s के सभी काम, श्रेणी विभाजन और मासिक खर्च का सारांश</string>
+    <string name="report_preview_work_details">%1$d सामग्री · %2$d हाज़िरी पंक्तियाँ · %3$d भुगतान</string>
+    <string name="report_preview_labourer_details">%1$d हाज़िरी दिन · %2$d भुगतान · बाकी: %3$s</string>
+    <string name="report_export_report">रिपोर्ट निर्यात करें</string>
+    <string name="report_export_statement">हिसाब विवरण निर्यात करें</string>
+    <string name="report_empty_data">चुने गए फ़िल्टर के अनुसार कोई डेटा नहीं मिला</string>
+    <string name="report_col_sno">क्र.सं.</string>
+    <string name="report_col_item">सामग्री</string>
+    <string name="report_col_brand">ब्रांड</string>
+    <string name="report_col_qty">मात्रा</string>
+    <string name="report_col_unit">इकाई</string>
+    <string name="report_col_rate">दर</string>
+    <string name="report_col_amount">राशि</string>
+    <string name="report_col_shop">दुकान</string>
+    <string name="report_col_skill">हुनर</string>
+    <string name="report_col_mode">माध्यम</string>
+    <string name="report_col_ref">रेफ़ / UTR</string>
+    <string name="report_col_status">स्थिति</string>
+    <string name="report_col_advance">एडवांस</string>
+    <string name="report_col_variance">अंतर</string>
+    <string name="report_sig_labourer">मज़दूर के हस्ताक्षर</string>
+    <string name="report_sig_owner">मालिक / ठेकेदार के हस्ताक्षर</string>
+
+    <!-- Phase 8: Settings & Safety -->
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_section_appearance">दिखावट (थीम)</string>
+    <string name="settings_theme">थीम</string>
+    <string name="settings_theme_system">सिस्टम डिफ़ॉल्ट</string>
+    <string name="settings_theme_light">लाइट</string>
+    <string name="settings_theme_dark">डार्क</string>
+    <string name="settings_dynamic_color">डायनामिक रंग</string>
+    <string name="settings_dynamic_color_desc">Android 12+ पर वॉलपेपर के रंगों से मेल खाएं</string>
+
+    <string name="settings_section_work_currency">काम और मुद्रा</string>
+    <string name="settings_hours_per_day">प्रतिदिन डिफ़ॉल्ट घंटे</string>
+    <string name="settings_hours_per_day_desc">%1$d घंटे (दैनिक हाज़िरी और ओवरटाइम गणना के लिए)</string>
+    <string name="settings_currency_symbol">मुद्रा प्रतीक</string>
+    <string name="settings_currency_symbol_desc">भारतीय रुपया (₹)</string>
+
+    <string name="settings_section_security">सुरक्षा और ऐप लॉक</string>
+    <string name="settings_app_lock">ऐप लॉक</string>
+    <string name="settings_app_lock_desc">ऐप खोलने के लिए बायोमेट्रिक या स्क्रीन लॉक पिन आवश्यक करें</string>
+    <string name="settings_app_lock_not_setup">डिवाइस पर स्क्रीन लॉक सेट नहीं है</string>
+    <string name="app_locked_title">GharKharcha लॉक है</string>
+    <string name="app_locked_subtitle">अपने बायोमेट्रिक या डिवाइस लॉक से अनलॉक करें</string>
+    <string name="action_unlock">अनलॉक करें</string>
+
+    <string name="settings_section_reminders">रिमाइंडर</string>
+    <string name="settings_daily_attendance_reminder">दैनिक हाज़िरी रिमाइंडर</string>
+    <string name="settings_daily_attendance_reminder_desc">%1$s पर हाज़िरी लगाने की याद दिलाएं</string>
+    <string name="settings_payday_reminder">साप्ताहिक भुगतान रिमाइंडर</string>
+    <string name="settings_payday_reminder_desc">मज़दूरों के कुल बकाए की साप्ताहिक सूचना</string>
+    <string name="settings_reminder_time">रिमाइंडर का समय</string>
+
+    <string name="settings_section_backup">बैकअप और पुनर्स्थापना (रिस्टोर)</string>
+    <string name="settings_backup_title">सभी डेटा और फोटो का बैकअप लें</string>
+    <string name="settings_backup_desc">डेटाबेस और फोटो को एक ज़िप संग्रह में निर्यात करें</string>
+    <string name="settings_backup_action">बैकअप बनाएं</string>
+    <string name="settings_backup_success">बैकअप सफलतापूर्वक बना (%1$s)</string>
+    <string name="settings_backup_last">अंतिम बैकअप: %1$s</string>
+    <string name="settings_backup_never">कभी बैकअप नहीं लिया गया</string>
+
+    <string name="settings_restore_title">बैकअप से रिस्टोर करें</string>
+    <string name="settings_restore_desc">ज़िप संग्रह से सभी घर, काम, सामग्री, लेबर और फोटो पुनर्स्थापित करें</string>
+    <string name="settings_restore_action">बैकअप रिस्टोर करें</string>
+    <string name="settings_restore_confirm_title">बैकअप रिस्टोर करें?</string>
+    <string name="settings_restore_confirm_message">यह वर्तमान डेटा को बैकअप ज़िप की सामग्री से बदल देगा। सुनिश्चित करें कि आपने हाल के परिवर्तनों का बैकअप ले लिया है।</string>
+    <string name="settings_restore_success">रिस्टोर पूरा हुआ! %1$d फोटो पुनर्स्थापित किए गए।</string>
+    <string name="settings_restore_failed">रिस्टोर विफल: %1$s</string>
+
+    <!-- Phase 9: Demo Data & Polish -->
+    <string name="settings_section_demo">डेमो डेटा</string>
+    <string name="settings_demo_title">नमूना डेटा लोड करें</string>
+    <string name="settings_demo_desc">परीक्षण के लिए 1 घर, 3 काम, 4 मज़दूर, सामग्री और 2 सप्ताह की हाज़िरी जोड़ें</string>
+    <string name="settings_demo_action">डेमो डेटा लोड करें</string>
+    <string name="settings_demo_confirm_title">डेमो डेटा लोड करें?</string>
+    <string name="settings_demo_confirm_message">यह आपके ऐप में नमूना घर (सपनों का घर), काम, मज़दूर और खर्च जोड़ देगा ताकि आप सभी सुविधाएँ देख सकें।</string>
+    <string name="settings_demo_success">डेमो डेटा सफलतापूर्वक लोड हो गया!</string>
+</resources>

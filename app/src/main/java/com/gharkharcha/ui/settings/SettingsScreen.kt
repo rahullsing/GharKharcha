@@ -125,6 +125,7 @@ fun SettingsScreen(
     // Restore SAF Open Document launcher
     var pendingRestoreUri by remember { mutableStateOf<Uri?>(null) }
     var showRestoreConfirmDialog by remember { mutableStateOf(false) }
+    var showDemoConfirmDialog by remember { mutableStateOf(false) }
 
     val openBackupLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.OpenDocument(),
@@ -488,6 +489,35 @@ fun SettingsScreen(
                 }
             }
 
+            // Demo Data Section
+            SettingsSectionHeader(stringResource(R.string.settings_section_demo))
+            OutlinedCard(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surface),
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    ListItem(
+                        headlineContent = { Text(stringResource(R.string.settings_demo_title)) },
+                        supportingContent = { Text(stringResource(R.string.settings_demo_desc)) },
+                        leadingContent = {
+                            Icon(painterResource(R.drawable.ic_house), contentDescription = null)
+                        },
+                        trailingContent = {
+                            if (state.isSeeding) {
+                                CircularProgressIndicator(Modifier.size(24.dp))
+                            } else {
+                                OutlinedButton(
+                                    onClick = { showDemoConfirmDialog = true },
+                                    enabled = !state.isBackingUp && !state.isRestoring,
+                                ) {
+                                    Text(stringResource(R.string.settings_demo_action))
+                                }
+                            }
+                        },
+                    )
+                }
+            }
+
             Spacer(Modifier.height(32.dp))
         }
     }
@@ -543,6 +573,21 @@ fun SettingsScreen(
                 pendingRestoreUri = null
             },
             destructive = true,
+        )
+    }
+
+    // Demo Data Confirmation Dialog
+    if (showDemoConfirmDialog) {
+        ConfirmDialog(
+            title = stringResource(R.string.settings_demo_confirm_title),
+            message = stringResource(R.string.settings_demo_confirm_message),
+            confirmLabel = stringResource(R.string.settings_demo_action),
+            onConfirm = {
+                showDemoConfirmDialog = false
+                viewModel.loadSampleData()
+            },
+            onDismiss = { showDemoConfirmDialog = false },
+            destructive = false,
         )
     }
 }

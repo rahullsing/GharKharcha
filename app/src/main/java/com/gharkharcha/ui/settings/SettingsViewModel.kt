@@ -9,6 +9,7 @@ import com.gharkharcha.data.prefs.UserPreferences
 import com.gharkharcha.data.prefs.UserPreferencesRepository
 import com.gharkharcha.data.repo.BackupRepository
 import com.gharkharcha.data.repo.RestoreResult
+import com.gharkharcha.data.sample.SampleDataSeeder
 import com.gharkharcha.reminders.ReminderScheduler
 import com.gharkharcha.security.AppLockManager
 import com.gharkharcha.util.Money
@@ -30,6 +31,7 @@ data class SettingsUiState(
     val isDeviceSecure: Boolean = false,
     val isBackingUp: Boolean = false,
     val isRestoring: Boolean = false,
+    val isSeeding: Boolean = false,
 )
 
 sealed interface SettingsEvent {
@@ -37,27 +39,35 @@ sealed interface SettingsEvent {
     data class Error(val message: String) : SettingsEvent
 }
 
+private data class OperationLoading(
+    val backingUp: Boolean = false,
+    val restoring: Boolean = false,
+    val seeding: Boolean = false,
+)
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val prefsRepo: UserPreferencesRepository,
     private val backupRepo: BackupRepository,
     private val appLockManager: AppLockManager,
+    private val seeder: SampleDataSeeder,
 ) : ViewModel() {
 
-    private val _loadingState = MutableStateFlow(Pair(false, false)) // (isBackingUp, isRestoring)
+    private val _loadingState = MutableStateFlow(OperationLoading())
     private val _events = Channel<SettingsEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
     val state: StateFlow<SettingsUiState> = combine(
         prefsRepo.preferences,
         _loadingState,
-    ) { prefs, (backingUp, restoring) ->
+    ) { prefs, loading ->
         SettingsUiState(
             prefs = prefs,
             isDeviceSecure = appLockManager.isDeviceSecure(),
-            isBackingUp = backingUp,
-            isRestoring = restoring,
+            isBackingUp = loading.backingUp,
+            isRestoring = loading.restoring,
+            isSeeding = loading.seeding,
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState())
 
@@ -110,7 +120,7 @@ class SettingsViewModel @Inject constructor(
 
     fun createBackup(targetUri: Uri) {
         viewModelScope.launch {
-            _loadingState.update { it.copy(first = true) }
+            _loadingState.update { it.copy(backingUp = true) }
             try {
                 val metadata = backupRepo.createBackup(targetUri)
                 val sizeKb = metadata.totalBytes / 1024
@@ -118,14 +128,14 @@ class SettingsViewModel @Inject constructor(
             } catch (e: Exception) {
                 _events.send(SettingsEvent.Error(e.message ?: "Backup failed"))
             } finally {
-                _loadingState.update { it.copy(first = false) }
+                _loadingState.update { it.copy(backingUp = false) }
             }
         }
     }
 
     fun restoreBackup(sourceUri: Uri) {
         viewModelScope.launch {
-            _loadingState.update { it.copy(second = true) }
+            _loadingState.update { it.copy(restoring = true) }
             try {
                 when (val result = backupRepo.restoreBackup(sourceUri)) {
                     is RestoreResult.Success -> {
@@ -138,7 +148,21 @@ class SettingsViewModel @Inject constructor(
             } catch (e: Exception) {
                 _events.send(SettingsEvent.Error(e.message ?: "Restore failed"))
             } finally {
-                _loadingState.update { it.copy(second = false) }
+                _loadingState.update { it.copy(restoring = false) }
+            }
+        }
+    }
+
+    fun loadSampleData() {
+        viewModelScope.launch {
+            _loadingState.update { it.copy(seeding = true) }
+            try {
+                seeder.seedSampleData()
+                _events.send(SettingsEvent.Success("Sample data loaded successfully!"))
+            } catch (e: Exception) {
+                _events.send(SettingsEvent.Error(e.message ?: "Failed to seed sample data"))
+            } finally {
+                _loadingState.update { it.copy(seeding = false) }
             }
         }
     }
