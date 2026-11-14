@@ -22,7 +22,9 @@ import com.gharkharcha.ui.photos.CameraScreen
 import com.gharkharcha.ui.photos.PhotoViewerScreen
 import com.gharkharcha.ui.projects.ProjectEditScreen
 import com.gharkharcha.ui.projects.ProjectsScreen
+import com.gharkharcha.ui.reports.ReportsScreen
 import com.gharkharcha.ui.search.SearchScreen
+import com.gharkharcha.ui.settings.SettingsScreen
 import com.gharkharcha.ui.vendors.VendorEditScreen
 import com.gharkharcha.ui.vendors.VendorsScreen
 import com.gharkharcha.ui.works.WorkDetailScreen
@@ -92,7 +94,12 @@ fun AppNavHost(
             )
         }
         composable<MoreRoute> {
-            MoreScreen(onOpenProjects = manageProjects, onOpenVendors = { navController.navigate(VendorsRoute) })
+            MoreScreen(
+                onOpenProjects = manageProjects,
+                onOpenVendors = { navController.navigate(VendorsRoute) },
+                onOpenReports = { navController.navigate(ReportsRoute()) },
+                onOpenSettings = { navController.navigate(SettingsRoute) },
+            )
         }
 
         composable<ProjectsRoute> {
@@ -124,6 +131,9 @@ fun AppNavHost(
                 onOpenMaterial = { navController.navigate(MaterialEditRoute(workId = it.workId, materialId = it.id)) },
                 onOpenPhoto = { workId, attachmentId ->
                     navController.navigate(PhotoViewerRoute(workId = workId, startId = attachmentId))
+                },
+                onExportReport = { workId ->
+                    navController.navigate(ReportsRoute(initialType = "WORK", initialWorkId = workId))
                 },
             )
         }
@@ -168,6 +178,9 @@ fun AppNavHost(
                 onOpenDay = { workId, date -> navController.navigate(AttendanceRoute(workId, date.toEpochDay())) },
                 onOpenPhoto = { labourerId ->
                     navController.navigate(PhotoViewerRoute(ownerType = OwnerType.LABOURER.name, ownerId = labourerId))
+                },
+                onExportStatement = { labourerId ->
+                    navController.navigate(ReportsRoute(initialType = "LABOURER", initialLabourerId = labourerId))
                 },
             )
         }
@@ -227,6 +240,12 @@ fun AppNavHost(
                 onOpenPayment = openPayment,
                 onOpenVendor = { navController.navigate(VendorEditRoute(it)) },
             )
+        }
+        composable<ReportsRoute> {
+            ReportsScreen(onBack = back)
+        }
+        composable<SettingsRoute> {
+            SettingsScreen(onBack = back)
         }
     }
 }

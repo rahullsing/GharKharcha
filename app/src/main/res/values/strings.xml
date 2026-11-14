@@ -467,4 +467,97 @@
     <string name="search_section_materials">Materials (%1$d)</string>
     <string name="search_section_payments">Payments (%1$d)</string>
     <string name="search_section_vendors">Vendors / Shops (%1$d)</string>
+
+    <!-- Phase 7: Reports (PDF + CSV) -->
+    <string name="reports_title">Reports &amp; statements</string>
+    <string name="report_type">Report type</string>
+    <string name="report_type_house">House summary</string>
+    <string name="report_type_work">Work report</string>
+    <string name="report_type_labourer">Labourer statement</string>
+    <string name="report_format">Format</string>
+    <string name="report_format_pdf">PDF document</string>
+    <string name="report_format_csv">CSV spreadsheet</string>
+    <string name="report_filter_date">Date range</string>
+    <string name="report_date_all_time">All time</string>
+    <string name="report_date_this_month">This month</string>
+    <string name="report_date_last_month">Last month</string>
+    <string name="report_date_custom">Custom range</string>
+    <string name="report_from_date">From date</string>
+    <string name="report_to_date">To date</string>
+    <string name="report_select_work">Select work</string>
+    <string name="report_select_labourer">Select labourer</string>
+    <string name="report_include_photos">Include photo appendix (bills &amp; receipts)</string>
+    <string name="report_generate_share">Generate &amp; Share</string>
+    <string name="report_generating">Generating report&#8230;</string>
+    <string name="report_saved_and_shared">Report saved to Documents/GharKharcha</string>
+    <string name="report_preview_title">Report preview</string>
+    <string name="report_preview_house_summary">Summary of all works, category split and monthly spend for %1$s</string>
+    <string name="report_preview_work_details">%1$d materials · %2$d attendance rows · %3$d payments</string>
+    <string name="report_preview_labourer_details">%1$d attendance days · %2$d payments · Pending: %3$s</string>
+    <string name="report_export_report">Export report</string>
+    <string name="report_export_statement">Export statement</string>
+    <string name="report_empty_data">No data found matching selected filters</string>
+    <string name="report_col_sno">S.No</string>
+    <string name="report_col_item">Item</string>
+    <string name="report_col_brand">Brand</string>
+    <string name="report_col_qty">Qty</string>
+    <string name="report_col_unit">Unit</string>
+    <string name="report_col_rate">Rate</string>
+    <string name="report_col_amount">Amount</string>
+    <string name="report_col_shop">Shop</string>
+    <string name="report_col_skill">Skill</string>
+    <string name="report_col_mode">Mode</string>
+    <string name="report_col_ref">Ref / UTR</string>
+    <string name="report_col_status">Status</string>
+    <string name="report_col_advance">Advance</string>
+    <string name="report_col_variance">Variance</string>
+    <string name="report_sig_labourer">Labourer\'s Signature</string>
+    <string name="report_sig_owner">Contractor / Owner Signature</string>
+
+    <!-- Phase 8: Settings & Safety -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_dynamic_color">Dynamic colour</string>
+    <string name="settings_dynamic_color_desc">Match wallpaper colours on Android 12+</string>
+
+    <string name="settings_section_work_currency">Work &amp; Currency</string>
+    <string name="settings_hours_per_day">Default hours per day</string>
+    <string name="settings_hours_per_day_desc">%1$d hours (used for daily attendance &amp; overtime calculation)</string>
+    <string name="settings_currency_symbol">Currency symbol</string>
+    <string name="settings_currency_symbol_desc">Indian Rupee (₹)</string>
+
+    <string name="settings_section_security">Security &amp; App Lock</string>
+    <string name="settings_app_lock">App lock</string>
+    <string name="settings_app_lock_desc">Require biometric or device PIN/pattern to open app</string>
+    <string name="settings_app_lock_not_setup">Screen lock not configured on device</string>
+    <string name="app_locked_title">GharKharcha is locked</string>
+    <string name="app_locked_subtitle">Unlock with your biometric or device lock</string>
+    <string name="action_unlock">Unlock</string>
+
+    <string name="settings_section_reminders">Reminders</string>
+    <string name="settings_daily_attendance_reminder">Daily attendance reminder</string>
+    <string name="settings_daily_attendance_reminder_desc">Remind to mark attendance at %1$s</string>
+    <string name="settings_payday_reminder">Weekly payday reminder</string>
+    <string name="settings_payday_reminder_desc">Weekly notification showing total pending labour dues</string>
+    <string name="settings_reminder_time">Reminder time</string>
+
+    <string name="settings_section_backup">Backup &amp; Restore</string>
+    <string name="settings_backup_title">Backup all data &amp; photos</string>
+    <string name="settings_backup_desc">Export database and photos into a single zip archive</string>
+    <string name="settings_backup_action">Create backup</string>
+    <string name="settings_backup_success">Backup created successfully (%1$s)</string>
+    <string name="settings_backup_last">Last backup: %1$s</string>
+    <string name="settings_backup_never">Never backed up</string>
+
+    <string name="settings_restore_title">Restore from backup</string>
+    <string name="settings_restore_desc">Restore all houses, works, materials, labour &amp; photos from a zip</string>
+    <string name="settings_restore_action">Restore backup</string>
+    <string name="settings_restore_confirm_title">Restore backup?</string>
+    <string name="settings_restore_confirm_message">This will replace current data with the contents of the backup zip. Make sure you have backed up any recent changes.</string>
+    <string name="settings_restore_success">Restore completed! %1$d photos restored.</string>
+    <string name="settings_restore_failed">Restore failed: %1$s</string>
 </resources>

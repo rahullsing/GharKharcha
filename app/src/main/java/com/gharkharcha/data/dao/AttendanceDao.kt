@@ -103,6 +103,16 @@ interface AttendanceDao {
     )
     fun observeRecentForProject(projectId: Long, limit: Int = 10): Flow<List<AttendanceActivityRow>>
 
+    @Query(
+        """
+        SELECT a.*, l.name AS labourerName, l.custom_skill AS labourerSkill FROM attendance a
+        INNER JOIN labourers l ON l.id = a.labourer_id
+        WHERE a.work_id = :workId
+        ORDER BY a.date ASC, a.id ASC
+        """,
+    )
+    fun observeForWorkWithLabourer(workId: Long): Flow<List<AttendanceWithLabourer>>
+
     @Insert
     suspend fun insert(entry: AttendanceEntity): Long
 

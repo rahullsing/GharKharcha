@@ -18,7 +18,12 @@ import com.gharkharcha.R
 import com.gharkharcha.ui.components.TopLevelScaffold
 
 @Composable
-fun MoreScreen(onOpenProjects: () -> Unit, onOpenVendors: () -> Unit) {
+fun MoreScreen(
+    onOpenProjects: () -> Unit,
+    onOpenVendors: () -> Unit,
+    onOpenReports: () -> Unit,
+    onOpenSettings: () -> Unit,
+) {
     TopLevelScaffold(title = { Text(stringResource(R.string.more_title)) }) { padding ->
         Column(
             Modifier
@@ -41,14 +46,14 @@ fun MoreScreen(onOpenProjects: () -> Unit, onOpenVendors: () -> Unit) {
             MoreItem(
                 icon = R.drawable.ic_chart,
                 title = stringResource(R.string.more_reports),
-                subtitle = stringResource(R.string.coming_soon),
-                onClick = null,
+                subtitle = stringResource(R.string.more_reports_subtitle),
+                onClick = onOpenReports,
             )
             MoreItem(
                 icon = R.drawable.ic_settings,
                 title = stringResource(R.string.more_settings),
-                subtitle = stringResource(R.string.coming_soon),
-                onClick = null,
+                subtitle = stringResource(R.string.more_settings_subtitle),
+                onClick = onOpenSettings,
             )
         }
     }

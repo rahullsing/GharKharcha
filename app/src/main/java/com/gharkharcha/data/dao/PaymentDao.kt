@@ -77,6 +77,16 @@ interface PaymentDao {
     )
     fun observeTotalsByLabourer(projectId: Long? = null, workId: Long? = null): Flow<List<LabourerPaymentRow>>
 
+    @Query(
+        """
+        SELECT p.*, l.name AS labourerName FROM payments p
+        INNER JOIN labourers l ON l.id = p.labourer_id
+        WHERE p.work_id = :workId
+        ORDER BY p.date ASC, p.id ASC
+        """,
+    )
+    fun observeForWorkWithLabourer(workId: Long): Flow<List<PaymentWithLabourer>>
+
     @Insert
     suspend fun insert(payment: PaymentEntity): Long
 

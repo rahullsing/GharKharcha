@@ -42,6 +42,17 @@ interface AttachmentDao {
     )
     fun observeForWorkTree(workId: Long): Flow<List<AttachmentEntity>>
 
+    @Query(
+        """
+        SELECT * FROM attachments
+        WHERE (owner_type = 'WORK' AND owner_id = :workId)
+           OR (owner_type = 'MATERIAL' AND owner_id IN (SELECT id FROM materials WHERE work_id = :workId))
+           OR (owner_type = 'PAYMENT' AND owner_id IN (SELECT id FROM payments WHERE work_id = :workId))
+        ORDER BY created_at DESC, id DESC
+        """,
+    )
+    suspend fun listPhotosForWorkReport(workId: Long): List<AttachmentEntity>
+
     /** All attachments of one owner type, in display order (e.g. labourer profile photos). */
     @Query("SELECT * FROM attachments WHERE owner_type = :ownerType ORDER BY owner_id, sort_order, id")
     fun observeByOwnerType(ownerType: OwnerType): Flow<List<AttachmentEntity>>

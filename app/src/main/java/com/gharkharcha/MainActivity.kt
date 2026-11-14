@@ -1,10 +1,10 @@
 package com.gharkharcha
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -17,7 +17,7 @@ import com.gharkharcha.util.ShareIntentParser
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
     private val appViewModel: AppViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +36,11 @@ class MainActivity : ComponentActivity() {
                 GharKharchaAppUi(viewModel = appViewModel)
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        appViewModel.lockIfEnabled()
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -69,3 +69,16 @@ data class DailySpendRow(
     val date: java.time.LocalDate,
     val totalPaise: Long,
 )
+
+/** Attendance entry with labourer details, for work reports. */
+data class AttendanceWithLabourer(
+    @Embedded val attendance: AttendanceEntity,
+    val labourerName: String,
+    val labourerSkill: String,
+)
+
+/** Payment entry with labourer details, for work reports. */
+data class PaymentWithLabourer(
+    @Embedded val payment: com.gharkharcha.data.entity.PaymentEntity,
+    val labourerName: String,
+)

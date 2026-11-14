@@ -57,6 +57,16 @@ import kotlinx.serialization.Serializable
 @Serializable data class HouseBreakdownRoute(val projectId: Long)
 @Serializable data object SearchRoute
 
+// Reports & Exports
+@Serializable data class ReportsRoute(
+    val initialType: String = "HOUSE",
+    val initialWorkId: Long = 0,
+    val initialLabourerId: Long = 0,
+)
+
+// Settings
+@Serializable data object SettingsRoute
+
 enum class TopLevelDestination(
     val route: Any,
     @param:DrawableRes val icon: Int,

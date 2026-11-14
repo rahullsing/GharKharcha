@@ -21,6 +21,15 @@ data class UserPreferences(
     val selectedProjectId: Long? = null,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val dynamicColor: Boolean = true,
+    val currencySymbol: String = "₹",
+    val appLockEnabled: Boolean = false,
+    val attendanceReminderEnabled: Boolean = false,
+    val attendanceReminderHour: Int = 19,
+    val attendanceReminderMinute: Int = 0,
+    val paydayReminderEnabled: Boolean = false,
+    val autoBackupEnabled: Boolean = false,
+    val lastBackupTimestamp: Long = 0L,
+    val backupFolderUri: String? = null,
 )
 
 @Singleton
@@ -33,6 +42,15 @@ class UserPreferencesRepository @Inject constructor(
             selectedProjectId = p[SELECTED_PROJECT],
             themeMode = p[THEME]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() } ?: ThemeMode.SYSTEM,
             dynamicColor = p[DYNAMIC_COLOR] ?: true,
+            currencySymbol = p[CURRENCY_SYMBOL] ?: "₹",
+            appLockEnabled = p[APP_LOCK] ?: false,
+            attendanceReminderEnabled = p[ATTENDANCE_REMINDER] ?: false,
+            attendanceReminderHour = p[ATTENDANCE_HOUR]?.takeIf { it in 0..23 } ?: 19,
+            attendanceReminderMinute = p[ATTENDANCE_MINUTE]?.takeIf { it in 0..59 } ?: 0,
+            paydayReminderEnabled = p[PAYDAY_REMINDER] ?: false,
+            autoBackupEnabled = p[AUTO_BACKUP] ?: false,
+            lastBackupTimestamp = p[LAST_BACKUP] ?: 0L,
+            backupFolderUri = p[BACKUP_URI],
         )
     }.distinctUntilChanged()
 
@@ -55,10 +73,50 @@ class UserPreferencesRepository @Inject constructor(
         dataStore.edit { it[DYNAMIC_COLOR] = enabled }
     }
 
+    suspend fun setCurrencySymbol(symbol: String) {
+        dataStore.edit { it[CURRENCY_SYMBOL] = symbol }
+    }
+
+    suspend fun setAppLockEnabled(enabled: Boolean) {
+        dataStore.edit { it[APP_LOCK] = enabled }
+    }
+
+    suspend fun setAttendanceReminder(enabled: Boolean, hour: Int = 19, minute: Int = 0) {
+        dataStore.edit {
+            it[ATTENDANCE_REMINDER] = enabled
+            it[ATTENDANCE_HOUR] = hour
+            it[ATTENDANCE_MINUTE] = minute
+        }
+    }
+
+    suspend fun setPaydayReminder(enabled: Boolean) {
+        dataStore.edit { it[PAYDAY_REMINDER] = enabled }
+    }
+
+    suspend fun setAutoBackup(enabled: Boolean, uri: String? = null) {
+        dataStore.edit {
+            it[AUTO_BACKUP] = enabled
+            if (uri != null) it[BACKUP_URI] = uri
+        }
+    }
+
+    suspend fun recordBackupCompleted(timestamp: Long = System.currentTimeMillis()) {
+        dataStore.edit { it[LAST_BACKUP] = timestamp }
+    }
+
     private companion object {
         val HOURS_PER_DAY = intPreferencesKey("hours_per_day")
         val SELECTED_PROJECT = longPreferencesKey("selected_project_id")
         val THEME = stringPreferencesKey("theme_mode")
         val DYNAMIC_COLOR = booleanPreferencesKey("dynamic_color")
+        val CURRENCY_SYMBOL = stringPreferencesKey("currency_symbol")
+        val APP_LOCK = booleanPreferencesKey("app_lock_enabled")
+        val ATTENDANCE_REMINDER = booleanPreferencesKey("attendance_reminder_enabled")
+        val ATTENDANCE_HOUR = intPreferencesKey("attendance_reminder_hour")
+        val ATTENDANCE_MINUTE = intPreferencesKey("attendance_reminder_minute")
+        val PAYDAY_REMINDER = booleanPreferencesKey("payday_reminder_enabled")
+        val AUTO_BACKUP = booleanPreferencesKey("auto_backup_enabled")
+        val LAST_BACKUP = longPreferencesKey("last_backup_timestamp")
+        val BACKUP_URI = stringPreferencesKey("backup_folder_uri")
     }
 }

@@ -281,27 +281,101 @@ App ID `in.gharkharcha` · Kotlin package `com.gharkharcha` · minSdk 35 · targ
   - Real-time search verified: queried "sand", returned River Sand material and Gupta Sand Supplier vendor, with instant navigation to Material edit screen.
   - Budget alert verified: editing work budget to ₹20,000 triggered the "Over budget: Brick masonry is at 120% (₹24,100 of ₹20,000)" alert banner.
 
-## Phase 7 – Reports (PDF + CSV)
-- Filters: date range, work, labourer.
-- All PDFs: A4, built with the native `PdfDocument`, multi-page with automatic page breaks, "Page x of y", generated date, ₹ formatting, zebra rows.
-  - **Work report:**
-    - Header: house, work name, dates, status.
-    - Materials table (S.No, Date, Item, Brand, Qty, Unit, Rate, Amount, Shop).
-    - Labour table (Date, Name, Skill, Hours, Pay) and a Payments table.
-    - Totals: materials, labour, grand total, budget, variance.
-    - Optional appendix of bill/screenshot thumbnails, 2×3 per page.
-  - **Labourer statement:** photo, details, day-wise table, payments with UTR, Days/Earned/Paid/Pending summary, signature line.
-  - **House summary:** totals per work, category split, monthly totals.
-- CSV export of the same data.
-- Saved to `Documents/GharKharcha/` via MediaStore, then the share sheet opens (WhatsApp, email, Drive).
+## Phase 7 – Reports (PDF + CSV) (done)
 
-## Phase 8 – Settings & safety
-- Settings: currency display, hours per day, theme (system/light/dark, dynamic colour), app lock, backup/restore, reminders.
-- App lock with BiometricPrompt or the device PIN.
-- Daily "Mark today's attendance" reminder at a chosen time (WorkManager, POST_NOTIFICATIONS permission).
-- Weekly payday reminder showing pending dues.
-- Backup: the full database plus photos in a single `.zip` saved to a folder you pick (Storage Access Framework), with optional automatic weekly backup.
-- Restore from a zip, after a confirmation.
+### Filters & Selection
+- **Report Types:**
+  - **House summary:** Overview of total budget, grand total spent, remaining balance, work-by-work table with budget usage %, category split, and monthly totals table.
+  - **Work report:** Work status, budget, variance, materials purchase table (with brand, qty, unit, rate, amount, shop & payment status), labour attendance table (hours, overtime, rate, pay, advance), direct payments table (type, mode, UTR/reference), and financial summary totals. Optional photo appendix of bill and receipt thumbnails (2×3 grid per page).
+  - **Labourer statement:** Labourer profile photo, phone, skill, standard daily wage, summary cards (days worked, hours worked, earned, paid, net due/advance), day-wise attendance log table, direct payments table with UTR/mode, and formal dual signature lines for labourer & owner/contractor.
+- **Date Range Filters:**
+  - Presets: **All time**, **This month**, **Last month**, and **Custom range** with material date picker dialogs (`From date` to `To date`).
+- **Dynamic Scope Selectors:**
+  - Work selector dropdown for Work Report.
+  - Labourer selector dropdown for Labourer Statement.
+- **Format Toggle:**
+  - **PDF document** (native A4 printable document).
+  - **CSV spreadsheet** (RFC 4180 compliant with UTF-8 BOM for Microsoft Excel).
+
+### Native A4 Multi-Page PDF Generation (`PdfReportGenerator`)
+- Built using native Android `android.graphics.pdf.PdfDocument` with zero third-party dependencies.
+- Standard A4 layout: 595 × 842 points at 72 dpi with 36 pt margins.
+- Multi-page automatic page breaks with table header re-drawing across page boundaries.
+- Consistent branding: Primary teal (`#006A60`) headers, slate headers, zebra-striped rows (`#F8FAFC`), right-aligned currency columns with Indian currency grouping (`₹`).
+- Photo appendix with downsampled thumbnail grids (2 columns × 3 rows) decoding bill attachments.
+
+### RFC 4180 CSV Generation (`CsvReportGenerator`)
+- UTF-8 with BOM (`\uFEFF`) at file start for proper Microsoft Excel character encoding on Windows and macOS.
+- Automatic escaping for commas, double quotes (`""`), and newlines.
+- Structured sections with subtitles, column headers, and subtotal/grand total summary rows.
+
+### Storage & Sharing Integration (`ReportRepository`)
+- Reports written to internal scoped storage (`filesDir/reports/`).
+- Automatically copied to public storage in `Documents/GharKharcha/` via Android `MediaStore.Files` API.
+- Direct invocation of the Android Share Sheet (`Intent.ACTION_SEND` with `FileProvider` `content://` URI and `FLAG_GRANT_READ_URI_PERMISSION`) for instant sharing to WhatsApp, Google Drive, Gmail, Quick Share, or Print.
+
+### UI Integration & Navigation
+- Dedicated **Reports & statements** screen accessible from `MoreScreen` ("PDF and CSV for works and labourers").
+- Contextual export shortcuts:
+  - Overflow menu in `WorkDetailScreen`: "Export report" pre-selects the current work.
+  - Overflow menu in `LabourerLedgerScreen`: "Export statement" pre-selects the current labourer.
+
+### Tests & Verification
+- Unit test suite: `ReportsGeneratorTest` verifying `DateFilter` presets and CSV generation for House Summary, Work Report, and Labourer Statement with RFC 4180 escaping.
+- All 74 unit tests passing (`:app:testDebugUnitTest`).
+- Emulator verification:
+  - Generated and shared Labourer Statement PDF via Android Share Sheet (`Labourer_Statement_1_...pdf`).
+  - Generated and shared Labourer Statement CSV via Android Share Sheet (`Labourer_Statement_1_...csv`).
+  - Verified navigation from `MoreScreen`, `WorkDetailScreen` ("Export report"), and `LabourerLedgerScreen` ("Export statement").
+
+## Phase 8 – Settings & safety (done)
+
+### Appearance & Theme
+- **Theme Modes:** System default, Light, and Dark mode toggles with live instant switching across all screens without reloading.
+- **Dynamic Color:** Material You dynamic color palette integration (Android 12+ wallpaper colors) with an in-app toggle.
+
+### Work & Currency Preferences
+- **Default Hours Per Day:** Configurable standard workday duration (1 to 24 hours, default 8 hours) with increment/decrement steppers, dynamically driving attendance daily rates, hourly wage calculations, and overtime computations.
+- **Currency Symbol:** Formatted display for Indian Rupee (`₹`).
+
+### Security & App Lock
+- **Biometric & Device Credential Authentication:**
+  - Integrated `androidx.biometric.BiometricPrompt` supporting hardware biometric sensors (Fingerprint, Face unlock) and device credential fallback (PIN, Pattern, Password).
+  - Pre-flight security check via `BiometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)` with clear messaging if device lock is unconfigured.
+  - Automatic full-screen lock scrim on cold app launch and when returning from background (`onStop` lifecycle tracking).
+  - Explicit unlock button and prompt invocation via `MainActivity` extending `FragmentActivity`.
+
+### Background Reminders (WorkManager)
+- **Notification Channel:** Dedicated `gharkharcha_reminders` ("Reminders & Alerts") channel.
+- **Daily Attendance Reminder:**
+  - `DailyAttendanceWorker` running periodic background check at user-customized time (e.g., 7:00 PM).
+  - Checks if attendance was marked for today; notifies user if pending with quick action to open app.
+  - Interactive Material 3 Time Picker dialog for choosing custom reminder time.
+  - Runtime `POST_NOTIFICATIONS` permission flow for Android 13+.
+- **Weekly Payday Reminder:**
+  - `WeeklyPaydayWorker` checks pending labour dues across all projects; aggregates total outstanding dues and displays actionable payday notification banner.
+
+### Complete Backup & Restore (Storage Access Framework)
+- **Backup (`BackupRepository`):**
+  - Database WAL flushed to disk via `PRAGMA wal_checkpoint(FULL)`.
+  - Packages SQLite database (`database/gharkharcha.db`), all photo attachments (`attachments/*`), and metadata `manifest.json` into a single compressed `.zip` archive.
+  - Saved anywhere on internal or external storage via Android Storage Access Framework (`ActivityResultContracts.CreateDocument("application/zip")`).
+  - Tracks timestamp of last backup with human-readable date/time badge.
+- **Restore (`BackupRepository`):**
+  - Pick backup archive via SAF `ActivityResultContracts.OpenDocument()`.
+  - Pre-restore confirmation dialog warning user that current data will be replaced.
+  - Validates zip structure and database presence, closes active Room connections, cleanly extracts files, wipes obsolete WAL/SHM temporary files, restores photos, and re-initializes database.
+
+### Tests & Verification
+- Unit test suite: `BackupRepositoryTest` testing zip creation, metadata tracking, archive validation (missing DB rejection), and end-to-end roundtrip backup & restore extraction.
+- All 77 unit tests passing (`:app:testDebugUnitTest`).
+- Emulator UI verification on Medium Phone API 36.1:
+  - Settings screen navigation from More screen.
+  - Theme switching (System -> Dark -> System) verified.
+  - Work hours adjustment (8h -> 9h) verified.
+  - Attendance reminder toggle & time picker verified.
+  - Backup & restore UI verified.
+- Installable APK assembled: `app/build/outputs/apk/debug/app-debug.apk`.
 
 ## Phase 9 – Polish & release
 - Complete Hindi translation (`values-hi/strings.xml`); all text already lives in `strings.xml`.

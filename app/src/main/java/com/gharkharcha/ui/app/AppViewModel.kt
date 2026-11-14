@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gharkharcha.data.prefs.UserPreferences
 import com.gharkharcha.data.prefs.UserPreferencesRepository
+import com.gharkharcha.security.AppLockManager
 import com.gharkharcha.util.UndoDeleteManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,15 +21,26 @@ import javax.inject.Inject
 class AppViewModel @Inject constructor(
     prefs: UserPreferencesRepository,
     private val undoManager: UndoDeleteManager,
+    private val appLockManager: AppLockManager,
 ) : ViewModel() {
     /** Null until DataStore has loaded, so the theme doesn't flash. */
     val preferences: StateFlow<UserPreferences?> =
         prefs.preferences.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    val isLocked: StateFlow<Boolean> = appLockManager.isLocked
+
     val undoRequests: Flow<UndoDeleteManager.Request> = undoManager.requestFlow
 
     private val _sharedUris = MutableStateFlow<List<Uri>>(emptyList())
     val sharedUris: StateFlow<List<Uri>> = _sharedUris.asStateFlow()
+
+    fun authenticate(activity: FragmentActivity) {
+        appLockManager.authenticate(activity) { }
+    }
+
+    fun lockIfEnabled() {
+        appLockManager.lockIfEnabled()
+    }
 
     fun onShareReceived(uris: List<Uri>) {
         if (uris.isNotEmpty()) {

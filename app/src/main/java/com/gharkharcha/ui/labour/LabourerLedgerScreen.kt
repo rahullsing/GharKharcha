@@ -81,6 +81,7 @@ fun LabourerLedgerScreen(
     onOpenPayment: (labourerId: Long, paymentId: Long) -> Unit,
     onOpenDay: (workId: Long, date: LocalDate) -> Unit,
     onOpenPhoto: (labourerId: Long) -> Unit,
+    onExportStatement: ((labourerId: Long) -> Unit)? = null,
     viewModel: LabourerLedgerViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -101,7 +102,10 @@ fun LabourerLedgerScreen(
                             Icon(painterResource(R.drawable.ic_edit), contentDescription = stringResource(R.string.action_edit))
                         }
                         OverflowMenu(
-                            listOf(
+                            listOfNotNull(
+                                onExportStatement?.let { export ->
+                                    MenuAction(stringResource(R.string.report_export_statement)) { export(ui.labourer.id) }
+                                },
                                 MenuAction(
                                     stringResource(if (ui.labourer.isActive) R.string.labourer_mark_inactive else R.string.labourer_mark_active),
                                     viewModel::toggleActive,

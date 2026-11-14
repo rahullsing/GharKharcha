@@ -68,6 +68,7 @@ fun WorkDetailScreen(
     onAddMaterial: (workId: Long) -> Unit,
     onOpenMaterial: (MaterialEntity) -> Unit,
     onOpenPhoto: (workId: Long, attachmentId: Long) -> Unit,
+    onExportReport: ((workId: Long) -> Unit)? = null,
     viewModel: WorkDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -90,7 +91,14 @@ fun WorkDetailScreen(
                         IconButton(onClick = { onEdit(item.work) }) {
                             Icon(painterResource(R.drawable.ic_edit), contentDescription = stringResource(R.string.action_edit))
                         }
-                        OverflowMenu(listOf(MenuAction(stringResource(R.string.action_delete)) { confirmDelete = true }))
+                        OverflowMenu(
+                            listOfNotNull(
+                                onExportReport?.let { export ->
+                                    MenuAction(stringResource(R.string.report_export_report)) { export(item.work.id) }
+                                },
+                                MenuAction(stringResource(R.string.action_delete)) { confirmDelete = true },
+                            ),
+                        )
                     }
                 },
             )
