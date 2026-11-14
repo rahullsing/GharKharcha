@@ -28,29 +28,56 @@ import com.gharkharcha.ui.components.FormScaffold
 import com.gharkharcha.ui.components.LoadingState
 import com.gharkharcha.ui.components.MoneyField
 import com.gharkharcha.ui.theme.Dimens
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import com.gharkharcha.ui.photos.AddPhotoSheet
+import com.gharkharcha.ui.photos.PhotoPreviewDialog
+import com.gharkharcha.ui.photos.SinglePhotoField
+import com.gharkharcha.ui.photos.rememberPreviewPath
 
 /** [onSaved] receives the labourer id (new labourers open their ledger next). */
 @Composable
 fun LabourerEditScreen(
     onBack: () -> Unit,
     onSaved: (id: Long, isNew: Boolean) -> Unit,
+    onOpenCamera: () -> Unit,
+    capturedPhoto: String?,
+    onCaptureConsumed: () -> Unit,
     viewModel: LabourerEditViewModel = hiltViewModel(),
 ) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(ui.savedId) { ui.savedId?.let { onSaved(it, ui.isNew) } }
+    LaunchedEffect(capturedPhoto) {
+        capturedPhoto?.let {
+            viewModel.onPhotoCaptured(it)
+            onCaptureConsumed()
+        }
+    }
+    var sheetOpen by rememberSaveable { mutableStateOf(false) }
+    var preview by rememberPreviewPath()
 
     FormScaffold(
         title = stringResource(if (ui.isNew) R.string.labourer_new else R.string.labourer_edit),
         onBack = onBack,
         onSave = viewModel::save,
         isDirty = ui.isDirty,
-        isSaving = ui.saving || ui.loading,
+        isSaving = ui.saving || ui.loading || ui.importing,
     ) {
         if (ui.loading) {
             LoadingState()
             return@FormScaffold
         }
         val f = ui.form
+        SinglePhotoField(
+            label = stringResource(R.string.profile_photo),
+            photo = f.photo,
+            onAdd = { sheetOpen = true },
+            onRemove = viewModel::removePhoto,
+            onOpen = { preview = f.photo?.path },
+            modifier = Modifier.fillMaxWidth(),
+        )
         AppTextField(
             value = f.name,
             onValueChange = viewModel::onName,
@@ -133,4 +160,13 @@ fun LabourerEditScreen(
             Text(stringResource(R.string.save_failed), color = MaterialTheme.colorScheme.error)
         }
     }
+
+    AddPhotoSheet(
+        visible = sheetOpen,
+        onDismiss = { sheetOpen = false },
+        onCamera = onOpenCamera,
+        onPicked = { uris -> uris.firstOrNull()?.let(viewModel::onPhotoPicked) },
+        multiple = false,
+    )
+    preview?.let { PhotoPreviewDialog(it, onDismiss = { preview = null }) }
 }

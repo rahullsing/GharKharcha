@@ -47,6 +47,10 @@ import com.gharkharcha.ui.components.MoneyText
 import com.gharkharcha.ui.components.OverflowMenu
 import com.gharkharcha.ui.components.budgetStatusText
 import com.gharkharcha.ui.theme.Dimens
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
+import java.io.File
 
 @Composable
 fun ProjectsScreen(
@@ -97,6 +101,7 @@ fun ProjectsScreen(
                 items(ui.projects, key = { it.project.id }) { row ->
                     ProjectCard(
                         row = row,
+                        coverPath = ui.covers[row.project.id],
                         isCurrent = row.project.id == ui.currentId,
                         onClick = {
                             viewModel.select(row.project.id)
@@ -131,6 +136,7 @@ fun ProjectsScreen(
 @Composable
 private fun ProjectCard(
     row: ProjectSummaryRow,
+    coverPath: String?,
     isCurrent: Boolean,
     onClick: () -> Unit,
     menu: List<MenuAction>,
@@ -143,6 +149,14 @@ private fun ProjectCard(
         border = if (isCurrent) BorderStroke(2.dp, MaterialTheme.colorScheme.primary) else null,
         colors = CardDefaults.cardColors(),
     ) {
+        if (coverPath != null) {
+            AsyncImage(
+                model = File(coverPath),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxWidth().height(120.dp),
+            )
+        }
         Column(
             Modifier.padding(start = Dimens.CardPadding, bottom = Dimens.CardPadding, end = Dimens.TinySpacing),
             verticalArrangement = Arrangement.spacedBy(Dimens.SmallSpacing),

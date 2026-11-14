@@ -256,7 +256,7 @@ private fun LabourerListRow(row: LabourerRow, onClick: () -> Unit, modifier: Mod
                     overflow = TextOverflow.Ellipsis,
                 )
             },
-            leadingContent = { LabourerAvatar(l.name) },
+            leadingContent = { LabourerAvatar(l.name, photoPath = row.photoPath) },
             trailingContent = { BalanceBlock(row.summary) },
             colors = ListItemDefaults.colors(containerColor = Color.Transparent),
             modifier = Modifier.clickable(onClick = onClick),

@@ -130,4 +130,49 @@ class ProjectWorkMaterialDaoTest : DaoTestBase() {
             db.attachmentDao().observeFor(OwnerType.PAYMENT, 1).first().map { it.filePath },
         )
     }
+
+    @Test fun `daily spend aggregates material and attendance per day`() = runTest {
+        val p = newProject()
+        val w = newWork(p)
+        val l = newLabourer()
+        val d1 = today.minusDays(2)
+        val d2 = today.minusDays(1)
+
+        db.materialDao().insert(material(w, 100_00).copy(purchaseDate = d1))
+        db.materialDao().insert(material(w, 50_00).copy(purchaseDate = d1))
+        db.materialDao().insert(material(w, 200_00).copy(purchaseDate = d2))
+
+        val matDaily = db.materialDao().observeAllDailySpend(p).first()
+        val d1Row = matDaily.first { it.date == d1 }
+        val d2Row = matDaily.first { it.date == d2 }
+        assertEquals(150_00, d1Row.totalPaise)
+        assertEquals(200_00, d2Row.totalPaise)
+
+        db.attendanceDao().insert(
+            AttendanceEntity(workId = w, labourerId = l, date = d1, status = AttendanceStatus.FULL_DAY, basePayPaise = 500_00),
+        )
+        val attDaily = db.attendanceDao().observeAllDailySpend(p).first()
+        assertEquals(500_00, attDaily.single { it.date == d1 }.totalPaise)
+    }
+
+    @Test fun `search queries across materials and works`() = runTest {
+        val p = newProject()
+        val w1 = newWork(p, "Bathroom Plumbing")
+        val w2 = newWork(p, "Kitchen Electrical")
+
+        db.materialDao().insert(material(w1, 50_00, brand = "Finolex", item = "PVC Pipe"))
+        db.materialDao().insert(material(w2, 100_00, brand = "Havells", item = "Switchboard"))
+
+        val pipes = db.materialDao().searchAll("PVC").first()
+        assertEquals(1, pipes.size)
+        assertEquals("PVC Pipe", pipes[0].itemName)
+
+        val havells = db.materialDao().searchAll("havells").first()
+        assertEquals(1, havells.size)
+        assertEquals("Switchboard", havells[0].itemName)
+
+        val plumbWorks = db.workDao().search(p, "plumb").first()
+        assertEquals(1, plumbWorks.size)
+        assertEquals("Bathroom Plumbing", plumbWorks[0].name)
+    }
 }

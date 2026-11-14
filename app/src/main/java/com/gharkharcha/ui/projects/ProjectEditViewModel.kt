@@ -6,6 +6,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.gharkharcha.data.entity.ProjectEntity
 import com.gharkharcha.data.repo.ProjectRepository
+import android.net.Uri
+import com.gharkharcha.data.entity.AttachmentKind
+import com.gharkharcha.data.entity.OwnerType
+import com.gharkharcha.data.files.ImageImporter
+import com.gharkharcha.data.repo.AttachmentRepository
+import com.gharkharcha.domain.model.PhotoItem
 import com.gharkharcha.domain.usecase.CurrentProjectUseCase
 import com.gharkharcha.ui.common.SavedForm
 import com.gharkharcha.ui.navigation.ProjectEditRoute
@@ -30,6 +36,7 @@ data class ProjectForm(
     val startDay: Long? = null,
     val budget: String = "",
     val notes: String = "",
+    val cover: PhotoItem? = null,
 ) {
     val startDate: LocalDate? get() = startDay?.let(LocalDate::ofEpochDay)
 }
@@ -44,6 +51,7 @@ data class ProjectEditUi(
     val saving: Boolean,
     val saved: Boolean,
     val saveFailed: Boolean,
+    val importing: Boolean,
 )
 
 @HiltViewModel
@@ -51,6 +59,8 @@ class ProjectEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val projects: ProjectRepository,
     private val currentProject: CurrentProjectUseCase,
+    private val attachments: AttachmentRepository,
+    private val importer: ImageImporter,
 ) : ViewModel() {
     private val projectId = savedStateHandle.toRoute<ProjectEditRoute>().projectId
     private val isNew = projectId == 0L
@@ -67,6 +77,7 @@ class ProjectEditViewModel @Inject constructor(
         val saving: Boolean = false,
         val saved: Boolean = false,
         val saveFailed: Boolean = false,
+        val importing: Boolean = false,
     )
 
     private val flags = MutableStateFlow(Flags(loading = !isNew))
@@ -87,6 +98,7 @@ class ProjectEditViewModel @Inject constructor(
                         startDay = project.startDate?.toEpochDay(),
                         budget = Money.toInput(project.budgetPaise),
                         notes = project.notes,
+                        cover = attachments.loadItems(OwnerType.PROJECT, project.id).firstOrNull(),
                     )
                     form.update { loaded }
                     baseline.update { loaded }
@@ -106,6 +118,7 @@ class ProjectEditViewModel @Inject constructor(
         saving = fl.saving,
         saved = fl.saved,
         saveFailed = fl.saveFailed,
+        importing = fl.importing,
     )
 
     private fun budgetInvalid(f: ProjectForm) = f.budget.isNotBlank() && (Money.parse(f.budget)?.let { it < 0 } ?: true)
@@ -115,6 +128,30 @@ class ProjectEditViewModel @Inject constructor(
     fun onStart(d: LocalDate?) = form.update { it.copy(startDay = d?.toEpochDay()) }
     fun onBudget(v: String) = form.update { it.copy(budget = v) }
     fun onNotes(v: String) = form.update { it.copy(notes = v) }
+
+    fun onCoverPicked(uri: Uri) = importCover { importer.importAll(listOf(uri), AttachmentKind.COVER).first.firstOrNull() }
+
+    fun onCoverCaptured(path: String) = importCover { importer.importCapture(path, AttachmentKind.COVER) }
+
+    fun removeCover() {
+        val old = form.value.cover ?: return
+        form.update { it.copy(cover = null) }
+        viewModelScope.launch { attachments.discardPending(old) }
+    }
+
+    private fun importCover(block: suspend () -> PhotoItem?) {
+        flags.update { it.copy(importing = true) }
+        viewModelScope.launch {
+            try {
+                val item = block() ?: return@launch
+                val old = form.value.cover
+                form.update { it.copy(cover = item) }
+                old?.let { attachments.discardPending(it) }
+            } finally {
+                flags.update { it.copy(importing = false) }
+            }
+        }
+    }
 
     fun save() {
         val f = form.value
@@ -136,6 +173,7 @@ class ProjectEditViewModel @Inject constructor(
                         notes = f.notes.trim(),
                     ),
                 )
+                attachments.replaceSingle(OwnerType.PROJECT, id, f.cover, AttachmentKind.COVER)
                 // A newly added house becomes the one you're looking at.
                 if (isNew) currentProject.select(id)
                 // Stay "saving" so the button can't be pressed again before the screen closes.

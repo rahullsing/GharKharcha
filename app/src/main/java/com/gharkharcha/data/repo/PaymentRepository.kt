@@ -6,6 +6,7 @@ import com.gharkharcha.data.dao.PaymentDao
 import com.gharkharcha.data.db.GharKharchaDatabase
 import com.gharkharcha.data.entity.OwnerType
 import com.gharkharcha.data.entity.PaymentEntity
+import com.gharkharcha.domain.model.PhotoItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,6 +35,17 @@ class PaymentRepository @Inject constructor(
             dao.update(payment.copy(updatedAt = System.currentTimeMillis()))
             payment.id
         }
+    }
+
+    /** Saves the payment, then synchronizes its attachments (receipts / screenshots). */
+    suspend fun saveWithPhotos(
+        payment: PaymentEntity,
+        photos: List<PhotoItem>,
+        removedPhotoIds: Collection<Long>,
+    ): Long {
+        val id = save(payment)
+        attachments.sync(OwnerType.PAYMENT, id, photos, removedPhotoIds)
+        return id
     }
 
     suspend fun delete(payment: PaymentEntity) {

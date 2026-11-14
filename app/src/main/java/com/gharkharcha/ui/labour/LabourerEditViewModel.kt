@@ -7,6 +7,12 @@ import androidx.navigation.toRoute
 import com.gharkharcha.data.entity.LabourerEntity
 import com.gharkharcha.data.entity.Skill
 import com.gharkharcha.data.repo.LabourerRepository
+import android.net.Uri
+import com.gharkharcha.data.entity.AttachmentKind
+import com.gharkharcha.data.entity.OwnerType
+import com.gharkharcha.data.files.ImageImporter
+import com.gharkharcha.data.repo.AttachmentRepository
+import com.gharkharcha.domain.model.PhotoItem
 import com.gharkharcha.ui.common.SavedForm
 import com.gharkharcha.ui.navigation.LabourerEditRoute
 import com.gharkharcha.util.Money
@@ -33,6 +39,7 @@ data class LabourerForm(
     val address: String = "",
     val idNotes: String = "",
     val isActive: Boolean = true,
+    val photo: PhotoItem? = null,
 )
 
 data class LabourerFormErrors(
@@ -53,12 +60,15 @@ data class LabourerEditUi(
     /** Id of the saved labourer once saving finished. */
     val savedId: Long?,
     val saveFailed: Boolean,
+    val importing: Boolean,
 )
 
 @HiltViewModel
 class LabourerEditViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val labourers: LabourerRepository,
+    private val attachments: AttachmentRepository,
+    private val importer: ImageImporter,
 ) : ViewModel() {
     private val labourerId = savedStateHandle.toRoute<LabourerEditRoute>().labourerId
     private val isNew = labourerId == 0L
@@ -73,6 +83,7 @@ class LabourerEditViewModel @Inject constructor(
         val saving: Boolean = false,
         val savedId: Long? = null,
         val saveFailed: Boolean = false,
+        val importing: Boolean = false,
     )
 
     private val flags = MutableStateFlow(Flags(loading = !isNew))
@@ -96,6 +107,7 @@ class LabourerEditViewModel @Inject constructor(
                         address = l.address,
                         idNotes = l.idNotes,
                         isActive = l.isActive,
+                        photo = attachments.loadItems(OwnerType.LABOURER, l.id).firstOrNull(),
                     )
                     form.update { loaded }
                     baseline.update { loaded }
@@ -114,6 +126,7 @@ class LabourerEditViewModel @Inject constructor(
         saving = fl.saving,
         savedId = fl.savedId,
         saveFailed = fl.saveFailed,
+        importing = fl.importing,
     )
 
     fun onName(v: String) = form.update { it.copy(name = v) }
@@ -125,6 +138,30 @@ class LabourerEditViewModel @Inject constructor(
     fun onAddress(v: String) = form.update { it.copy(address = v) }
     fun onIdNotes(v: String) = form.update { it.copy(idNotes = v) }
     fun onActive(v: Boolean) = form.update { it.copy(isActive = v) }
+
+    fun onPhotoPicked(uri: Uri) = importPhoto { importer.importAll(listOf(uri), AttachmentKind.PROFILE).first.firstOrNull() }
+
+    fun onPhotoCaptured(path: String) = importPhoto { importer.importCapture(path, AttachmentKind.PROFILE) }
+
+    fun removePhoto() {
+        val old = form.value.photo ?: return
+        form.update { it.copy(photo = null) }
+        viewModelScope.launch { attachments.discardPending(old) }
+    }
+
+    private fun importPhoto(block: suspend () -> PhotoItem?) {
+        flags.update { it.copy(importing = true) }
+        viewModelScope.launch {
+            try {
+                val item = block() ?: return@launch
+                val old = form.value.photo
+                form.update { it.copy(photo = item) }
+                old?.let { attachments.discardPending(it) }
+            } finally {
+                flags.update { it.copy(importing = false) }
+            }
+        }
+    }
 
     fun save() {
         val f = form.value
@@ -150,6 +187,7 @@ class LabourerEditViewModel @Inject constructor(
                         isActive = f.isActive,
                     ),
                 )
+                attachments.replaceSingle(OwnerType.LABOURER, id, f.photo, AttachmentKind.PROFILE)
                 // Stay "saving" so the button can't be pressed again before the screen closes.
                 flags.update { it.copy(savedId = id) }
             } catch (e: CancellationException) {

@@ -268,6 +268,7 @@
     <string name="payment_new">New payment</string>
     <string name="payment_edit">Edit payment</string>
     <string name="payment_to">To %1$s</string>
+    <string name="payment_select_labourer">Select labourer</string>
     <string name="payment_amount">Amount</string>
     <string name="payment_type">Type</string>
     <string name="payment_type_wage">Wages</string>
@@ -279,12 +280,138 @@
     <string name="payment_mode_cheque">Cheque</string>
     <string name="payment_date">Date</string>
     <string name="payment_reference">Reference / UTR number</string>
+    <string name="payment_period">Period covered</string>
+    <string name="payment_period_hint">Optional – e.g. for weekly wages</string>
+    <string name="payment_period_this_week">This week</string>
+    <string name="payment_period_last_week">Last week</string>
+    <string name="payment_period_custom">Custom</string>
+    <string name="payment_period_clear">Clear</string>
+    <string name="payment_period_from">From date</string>
+    <string name="payment_period_to">To date</string>
+    <string name="payment_period_range">%1$s to %2$s</string>
+    <string name="payment_receipts">Receipts &amp; screenshots</string>
     <string name="payment_work">For work</string>
     <string name="payment_work_none">Not linked to a work</string>
+    <string name="payment_add">Add payment</string>
+    <string name="payments_total">Payments total</string>
     <string name="payment_delete_title">Delete this payment?</string>
     <string name="payment_delete_message">It will be removed from the labourer\'s ledger.</string>
     <string name="payment_deleted">Payment deleted</string>
     <string name="field_amount_required">Enter an amount</string>
+
+    <!-- Share into app -->
+    <string name="share_title">Attach shared photo</string>
+    <string name="share_title_multiple">Attach %1$d shared photos</string>
+    <string name="share_attach_payment">Attach to payment</string>
+    <string name="share_attach_payment_desc">Record wage or advance to a labourer</string>
+    <string name="share_attach_material">Attach to material</string>
+    <string name="share_attach_material_desc">Record purchase or bill for a work</string>
+    <string name="share_select_labourer">Select labourer</string>
+    <string name="share_select_work">Select work</string>
+    <string name="share_no_labourers">No labourers available. Add a labourer first.</string>
+    <string name="share_no_works">No works available. Add a work first.</string>
+
+    <!-- Materials -->
+    <string name="material_add">Add material</string>
+    <string name="material_new">New material</string>
+    <string name="material_edit">Edit material</string>
+    <string name="material_mode_itemised">Item details</string>
+    <string name="material_mode_total">Total only</string>
+    <string name="material_item">Item</string>
+    <string name="material_item_hint">e.g. Wire 2.5 sq mm</string>
+    <string name="material_item_total_hint">e.g. Raw material</string>
+    <string name="material_brand">Brand</string>
+    <string name="material_qty">Quantity</string>
+    <string name="material_unit">Unit</string>
+    <string name="material_custom_unit">Unit name</string>
+    <string name="material_rate">Rate per unit</string>
+    <string name="material_total">Total</string>
+    <string name="material_total_auto">Quantity × rate. Type to change it.</string>
+    <string name="material_total_reset">Use qty × rate</string>
+    <string name="material_section_shop">Shop &amp; bill</string>
+    <string name="material_shop">Shop / vendor</string>
+    <string name="material_shop_phone">Shop phone</string>
+    <string name="material_date">Purchase date</string>
+    <string name="material_bill_no">Bill number</string>
+    <string name="material_payment_mode">Paid by</string>
+    <string name="material_paid">Paid</string>
+    <string name="material_paid_hint">Turn off if you still owe the shop</string>
+    <string name="material_unpaid">Unpaid</string>
+    <string name="material_section_photos">Photos</string>
+    <string name="material_bill_photos">Bill</string>
+    <string name="material_item_photos">Item photos</string>
+    <string name="material_duplicate">Duplicate</string>
+    <string name="material_duplicated">Copy added for today</string>
+    <string name="material_deleted">\"%1$s\" deleted</string>
+    <string name="material_delete_title">Delete this material?</string>
+    <string name="material_delete_message">\"%1$s\" and its photos will be deleted.</string>
+    <string name="material_qty_rate">%1$s %2$s × %3$s</string>
+    <string name="materials_total">Materials total</string>
+    <string name="materials_unpaid_total">Unpaid to shops: %1$s</string>
+    <string name="material_item_or_total_required">Enter an item name or a total</string>
+
+    <!-- Units -->
+    <string name="unit_metre">m</string>
+    <string name="unit_feet">ft</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_bag">bag</string>
+    <string name="unit_piece">piece</string>
+    <string name="unit_box">box</string>
+    <string name="unit_litre">litre</string>
+    <string name="unit_sq_ft">sq ft</string>
+    <string name="unit_custom">Other</string>
+
+    <!-- Material payment modes -->
+    <string name="material_mode_cash">Cash</string>
+    <string name="material_mode_upi">UPI</string>
+    <string name="material_mode_card">Card</string>
+    <string name="material_mode_bank">Bank</string>
+    <string name="material_mode_credit">Credit</string>
+
+    <!-- Vendors -->
+    <string name="vendors_title">Shops &amp; vendors</string>
+    <string name="more_vendors_subtitle">Shop names, phones and GSTIN</string>
+    <string name="vendor_add">Add shop</string>
+    <string name="vendor_new">New shop</string>
+    <string name="vendor_edit">Edit shop</string>
+    <string name="vendor_name">Shop name</string>
+    <string name="vendor_phone">Phone</string>
+    <string name="vendor_address">Address</string>
+    <string name="vendor_gstin">GSTIN</string>
+    <string name="vendor_name_taken">A shop with this name already exists</string>
+    <string name="vendors_empty_title">No shops yet</string>
+    <string name="vendors_empty_message">Shops are added automatically when you enter a material. You can also add them here.</string>
+    <string name="vendor_delete_title">Delete this shop?</string>
+    <string name="vendor_delete_message">Materials keep the shop name; only the saved contact is removed.</string>
+
+    <!-- Photos -->
+    <string name="photo_add">Add photo</string>
+    <string name="photo_take">Take photo</string>
+    <string name="photo_pick">Choose from gallery</string>
+    <string name="photo_remove">Remove photo</string>
+    <string name="photo_open">Open photo</string>
+    <string name="photo_change">Change photo</string>
+    <string name="photo_import_failed">Couldn\'t add that photo</string>
+    <string name="photo_caption">Caption</string>
+    <string name="photo_add_caption">Add caption</string>
+    <string name="photo_share">Share</string>
+    <string name="photo_delete_title">Delete this photo?</string>
+    <string name="photo_deleted">Photo deleted</string>
+    <string name="photo_count">%1$d of %2$d</string>
+    <string name="photo_zoom_hint">Pinch or double-tap to zoom</string>
+    <string name="photos_title">Photos</string>
+    <string name="profile_photo">Profile photo</string>
+    <string name="cover_photo">Cover photo</string>
+
+    <!-- Camera -->
+    <string name="camera_title">Take photo</string>
+    <string name="camera_capture">Capture</string>
+    <string name="camera_permission_title">Camera access needed</string>
+    <string name="camera_permission_message">Allow camera access to photograph bills and materials. Nothing leaves your phone.</string>
+    <string name="camera_permission_grant">Allow camera</string>
+    <string name="camera_permission_settings">Open settings</string>
+    <string name="camera_unavailable">Camera isn\'t available on this device</string>
+    <string name="camera_failed">Couldn\'t take the photo. Please try again.</string>
 
     <!-- More -->
     <string name="more_title">More</string>
@@ -293,4 +420,51 @@
     <string name="more_reports_subtitle">PDF and CSV for works and labourers</string>
     <string name="more_settings">Settings</string>
     <string name="more_settings_subtitle">Theme, lock, backup and reminders</string>
+
+    <!-- Phase 6: Dashboard, charts, breakdown, search -->
+    <string name="home_today_labour">Today\'s labour</string>
+    <string name="home_pending_dues">Labour dues</string>
+    <string name="home_no_dues">No pending dues</string>
+    <string name="home_quick_add">Quick add</string>
+    <string name="quick_add_material">Material</string>
+    <string name="quick_add_attendance">Attendance</string>
+    <string name="quick_add_payment">Payment</string>
+    <string name="chart_donut_title">Spend by work</string>
+    <string name="chart_donut_empty">No spend recorded yet</string>
+    <string name="chart_bars_title">Daily spend (last 30 days)</string>
+    <string name="chart_bars_empty">No spending in the last 30 days</string>
+    <string name="chart_bars_total">Total: %1$s</string>
+    <string name="alert_budget_exceeded">Over budget: %1$s is at %2$d%% (%3$s of %4$s)</string>
+    <string name="alert_budget_near">Budget warning: %1$s has reached %2$d%% (%3$s of %4$s)</string>
+    <string name="activity_recent_title">Recent activity</string>
+    <string name="activity_empty">No recent activity</string>
+    <string name="activity_material">%1$s · %2$s</string>
+    <string name="activity_attendance">Attendance: %1$s</string>
+    <string name="activity_payment">Payment: %1$s (%2$s)</string>
+    <string name="breakdown_title">House breakdown</string>
+    <string name="breakdown_subtitle">By work, category, month, labourer &amp; vendor</string>
+    <string name="breakdown_view_all">View full breakdown</string>
+    <string name="breakdown_tab_work">By work</string>
+    <string name="breakdown_tab_category">By category</string>
+    <string name="breakdown_tab_month">By month</string>
+    <string name="breakdown_tab_labourer">By labourer</string>
+    <string name="breakdown_tab_vendor">By vendor</string>
+    <string name="breakdown_category_material">Materials</string>
+    <string name="breakdown_category_labour">Labour</string>
+    <string name="breakdown_category_unpaid">Unpaid to shops</string>
+    <string name="breakdown_empty_month">No monthly records yet</string>
+    <string name="breakdown_empty_vendor">No shop purchases yet</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search labourers, materials, works, notes&#8230;</string>
+    <string name="search_empty">No results found for \"%1$s\"</string>
+    <string name="search_type_work">Work</string>
+    <string name="search_type_labourer">Labourer</string>
+    <string name="search_type_material">Material</string>
+    <string name="search_type_payment">Payment</string>
+    <string name="search_type_vendor">Shop</string>
+    <string name="search_section_works">Works (%1$d)</string>
+    <string name="search_section_labourers">Labourers (%1$d)</string>
+    <string name="search_section_materials">Materials (%1$d)</string>
+    <string name="search_section_payments">Payments (%1$d)</string>
+    <string name="search_section_vendors">Vendors / Shops (%1$d)</string>
 </resources>

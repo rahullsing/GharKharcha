@@ -31,6 +31,17 @@ interface LabourerDao {
     )
     suspend fun countReferences(id: Long): Int
 
+    @Query(
+        """
+        SELECT * FROM labourers
+        WHERE name LIKE '%' || :query || '%'
+           OR phone LIKE '%' || :query || '%'
+           OR custom_skill LIKE '%' || :query || '%'
+        ORDER BY is_active DESC, name COLLATE NOCASE
+        """,
+    )
+    fun search(query: String): Flow<List<LabourerEntity>>
+
     @Insert
     suspend fun insert(labourer: LabourerEntity): Long
 

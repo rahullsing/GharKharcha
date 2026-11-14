@@ -80,6 +80,7 @@ fun LabourerLedgerScreen(
     onAddPayment: (labourerId: Long, prefillPaise: Long) -> Unit,
     onOpenPayment: (labourerId: Long, paymentId: Long) -> Unit,
     onOpenDay: (workId: Long, date: LocalDate) -> Unit,
+    onOpenPhoto: (labourerId: Long) -> Unit,
     viewModel: LabourerLedgerViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -127,7 +128,11 @@ fun LabourerLedgerScreen(
             }
             Column(Modifier.fillMaxSize().padding(padding), horizontalAlignment = Alignment.CenterHorizontally) {
                 Column(Modifier.weight(1f).widthIn(max = ContentMaxWidth)) {
-                    ContactCard(data, Modifier.padding(horizontal = Dimens.ScreenPadding, vertical = Dimens.SmallSpacing))
+                    ContactCard(
+                        data,
+                        onOpenPhoto = { onOpenPhoto(data.labourer.id) },
+                        modifier = Modifier.padding(horizontal = Dimens.ScreenPadding, vertical = Dimens.SmallSpacing),
+                    )
                     if (data.lines.isEmpty()) {
                         Text(
                             stringResource(R.string.ledger_empty),
@@ -174,7 +179,7 @@ fun LabourerLedgerScreen(
 }
 
 @Composable
-private fun ContactCard(data: LedgerUi, modifier: Modifier = Modifier) {
+private fun ContactCard(data: LedgerUi, onOpenPhoto: () -> Unit, modifier: Modifier = Modifier) {
     val l = data.labourer
     val context = LocalContext.current
     val snackbar = LocalSnackbarHostState.current
@@ -186,7 +191,12 @@ private fun ContactCard(data: LedgerUi, modifier: Modifier = Modifier) {
     Card(modifier.fillMaxWidth()) {
         Column(Modifier.padding(Dimens.CardPadding), verticalArrangement = Arrangement.spacedBy(Dimens.ItemSpacing)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Dimens.ItemSpacing)) {
-                LabourerAvatar(l.name, size = 56.dp)
+                LabourerAvatar(
+                    l.name,
+                    size = 56.dp,
+                    photoPath = data.photoPath,
+                    modifier = if (data.photoPath != null) Modifier.clickable(onClick = onOpenPhoto) else Modifier,
+                )
                 Column(Modifier.weight(1f)) {
                     Text(l.skillLabel(), style = MaterialTheme.typography.titleMedium)
                     rateSummary(l)?.let {
@@ -277,17 +287,58 @@ private fun LedgerTable(
                                 .background(zebra)
                                 .clickable { onOpenPayment(p.id) }
                                 .padding(horizontal = Dimens.ScreenPadding, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Cell(DateFormats.formatCompact(p.date), W_DATE, body)
-                            val detail = listOfNotNull(
-                                stringResource(p.type.labelRes),
-                                stringResource(p.mode.labelRes),
-                                p.reference.takeIf { it.isNotBlank() },
-                            ).joinToString(stringResource(R.string.list_separator))
-                            Cell(detail, W_WORK, body.copy(color = MaterialTheme.colorScheme.primary))
+                            Column(Modifier.weight(W_WORK).padding(end = 4.dp)) {
+                                val detail = listOfNotNull(
+                                    stringResource(p.type.labelRes),
+                                    stringResource(p.mode.labelRes),
+                                    p.reference.takeIf { it.isNotBlank() },
+                                ).joinToString(stringResource(R.string.list_separator))
+                                Text(
+                                    detail,
+                                    style = body.copy(color = MaterialTheme.colorScheme.primary),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                if (p.periodFrom != null && p.periodTo != null) {
+                                    Text(
+                                        stringResource(R.string.payment_period_range, DateFormats.format(p.periodFrom), DateFormats.format(p.periodTo)),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                            }
                             Cell("", W_HOURS, body)
                             Cell("", W_PAY, body)
-                            Cell(Money.format(p.amountPaise), W_PAID, body.copy(fontWeight = FontWeight.SemiBold), TextAlign.End)
+                            Row(
+                                modifier = Modifier.weight(W_PAID),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                if (line.photoCount > 0) {
+                                    Icon(
+                                        painterResource(R.drawable.ic_photo),
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(14.dp).padding(end = 2.dp),
+                                    )
+                                    Text(
+                                        line.photoCount.toString(),
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.padding(end = 4.dp),
+                                    )
+                                }
+                                Text(
+                                    Money.format(p.amountPaise),
+                                    style = body.copy(fontWeight = FontWeight.SemiBold),
+                                    textAlign = TextAlign.End,
+                                )
+                            }
                         }
                     }
                 }

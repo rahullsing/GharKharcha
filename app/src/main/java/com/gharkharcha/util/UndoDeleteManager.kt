@@ -61,5 +61,6 @@ class UndoDeleteManager @Inject constructor(
         fun workKey(id: Long) = "work:$id"
         fun labourerKey(id: Long) = "labourer:$id"
         fun paymentKey(id: Long) = "payment:$id"
+        fun materialKey(id: Long) = "material:$id"
     }
 }

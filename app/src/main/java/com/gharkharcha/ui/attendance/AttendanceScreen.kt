@@ -264,7 +264,7 @@ private fun AttendanceRow(
                     onClick = onDetails,
                 ),
             ) {
-                LabourerAvatar(row.labourer.name, size = 40.dp)
+                LabourerAvatar(row.labourer.name, size = 40.dp, photoPath = row.photoPath)
                 Column(Modifier.weight(1f)) {
                     Text(row.labourer.name, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(

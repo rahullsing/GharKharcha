@@ -13,6 +13,8 @@ import com.gharkharcha.data.entity.WorkStatus
 import com.gharkharcha.data.prefs.UserPreferencesRepository
 import com.gharkharcha.data.repo.AttendanceRepository
 import com.gharkharcha.data.repo.LabourerRepository
+import com.gharkharcha.data.entity.OwnerType
+import com.gharkharcha.data.repo.AttachmentRepository
 import com.gharkharcha.data.repo.WorkRepository
 import com.gharkharcha.domain.calc.AttendanceDraft
 import com.gharkharcha.domain.calc.AttendanceDrafts
@@ -45,7 +47,7 @@ import kotlinx.serialization.builtins.nullable
 import java.time.LocalDate
 import javax.inject.Inject
 
-data class AttendanceRowUi(val labourer: LabourerEntity, val entry: AttendanceEntity?)
+data class AttendanceRowUi(val labourer: LabourerEntity, val entry: AttendanceEntity?, val photoPath: String? = null)
 
 data class AttendanceUi(
     val date: LocalDate,
@@ -78,6 +80,7 @@ class AttendanceViewModel @Inject constructor(
     private val labourers: LabourerRepository,
     private val attendance: AttendanceRepository,
     prefs: UserPreferencesRepository,
+    attachments: AttachmentRepository,
 ) : ViewModel() {
     private val route = savedStateHandle.toRoute<AttendanceRoute>()
     private val today = LocalDate.now()
@@ -123,15 +126,15 @@ class AttendanceViewModel @Inject constructor(
         combine(
             combine(projectWorks, currentWork, ::Pair),
             entries,
-            labourers.observeAll(),
+            combine(labourers.observeAll(), attachments.observeFirstPhotos(OwnerType.LABOURER), ::Pair),
             day,
             prefs.hoursPerDay,
-        ) { (workList, work), dayEntries, people, d, hpd ->
+        ) { (workList, work), dayEntries, (people, photos), d, hpd ->
             val date = LocalDate.ofEpochDay(d)
             val byLabourer = dayEntries.associateBy { it.labourerId }
             val rows = people
                 .filter { it.isActive || it.id in byLabourer }
-                .map { AttendanceRowUi(it, byLabourer[it.id]) }
+                .map { AttendanceRowUi(it, byLabourer[it.id], photos[it.id]) }
             AttendanceUi(
                 date = date,
                 isToday = date == today,

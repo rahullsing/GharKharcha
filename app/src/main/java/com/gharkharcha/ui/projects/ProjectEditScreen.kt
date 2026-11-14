@@ -17,21 +17,43 @@ import com.gharkharcha.ui.components.DateField
 import com.gharkharcha.ui.components.FormScaffold
 import com.gharkharcha.ui.components.LoadingState
 import com.gharkharcha.ui.components.MoneyField
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.gharkharcha.ui.photos.AddPhotoSheet
+import com.gharkharcha.ui.photos.PhotoPreviewDialog
+import com.gharkharcha.ui.photos.SinglePhotoField
+import com.gharkharcha.ui.photos.rememberPreviewPath
 
 @Composable
 fun ProjectEditScreen(
     onDone: () -> Unit,
+    onOpenCamera: () -> Unit,
+    capturedPhoto: String?,
+    onCaptureConsumed: () -> Unit,
     viewModel: ProjectEditViewModel = hiltViewModel(),
 ) {
     val ui by viewModel.state.collectAsStateWithLifecycle()
     LaunchedEffect(ui.saved) { if (ui.saved) onDone() }
+    LaunchedEffect(capturedPhoto) {
+        capturedPhoto?.let {
+            viewModel.onCoverCaptured(it)
+            onCaptureConsumed()
+        }
+    }
+    var sheetOpen by rememberSaveable { mutableStateOf(false) }
+    var preview by rememberPreviewPath()
 
     FormScaffold(
         title = stringResource(if (ui.isNew) R.string.project_new else R.string.project_edit),
         onBack = onDone,
         onSave = viewModel::save,
         isDirty = ui.isDirty,
-        isSaving = ui.saving || ui.loading,
+        isSaving = ui.saving || ui.loading || ui.importing,
     ) {
         if (ui.loading) {
             LoadingState()
@@ -74,8 +96,26 @@ fun ProjectEditScreen(
             singleLine = false,
             minLines = 3,
         )
+        SinglePhotoField(
+            label = stringResource(R.string.cover_photo),
+            photo = form.cover,
+            onAdd = { sheetOpen = true },
+            onRemove = viewModel::removeCover,
+            onOpen = { preview = form.cover?.path },
+            round = false,
+            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        )
         if (ui.saveFailed) {
             Text(stringResource(R.string.save_failed), color = MaterialTheme.colorScheme.error)
         }
     }
+
+    AddPhotoSheet(
+        visible = sheetOpen,
+        onDismiss = { sheetOpen = false },
+        onCamera = onOpenCamera,
+        onPicked = { uris -> uris.firstOrNull()?.let(viewModel::onCoverPicked) },
+        multiple = false,
+    )
+    preview?.let { PhotoPreviewDialog(it, onDismiss = { preview = null }) }
 }

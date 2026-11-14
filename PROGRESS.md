@@ -8,7 +8,7 @@ App ID `in.gharkharcha` · Kotlin package `com.gharkharcha` · minSdk 35 · targ
 | 1 | Gradle, Hilt, Room schema, DAOs, repositories, calculation tests | ✅ Done (commit `6ce48dd`) |
 | 2 | Navigation shell, theme, Projects + Works CRUD | ✅ Done (commit `4eca89e`) |
 | 3 | Labourers, attendance sheet, labourer ledger | ✅ Done |
-| 4 | Materials, vendors, photos, attachment viewer | ⏳ Pending |
+| 4 | Materials, vendors, photos, attachment viewer | ✅ Done |
 | 5 | Payments with screenshots, share-intent receiver | ⏳ Pending |
 | 6 | Dashboard and charts | ⏳ Pending |
 | 7 | PDF + CSV reports | ⏳ Pending |
@@ -131,35 +131,155 @@ App ID `in.gharkharcha` · Kotlin package `com.gharkharcha` · minSdk 35 · targ
 
 ---
 
-## Phase 4 – Materials, vendors & photos
-- Add/Edit material:
-  - Item name, brand, quantity, unit (m, ft, kg, bag, piece, box, litre, sq ft, custom), rate, and a live total (qty × rate) that can be overridden.
-  - Shop name and phone, purchase date, bill number, payment mode (Cash/UPI/Card/Bank/Credit), paid/unpaid, notes.
-  - Quick "total only" entry (e.g. "Raw material – ₹4,500").
-- Brand, item and vendor autocomplete; vendor master list (shop, phone, address, GSTIN).
-- Duplicate a material entry.
-- Work detail Materials tab with totals and unpaid (credit) amounts.
-- Photos:
-  - CameraX capture and Photo Picker multi-select. Only the CAMERA permission is asked for; no storage permission is needed.
-  - Photos are compressed to at most 1600 px as JPEG at about 80% quality, keeping the EXIF date, and stored in `filesDir/attachments/<entity>/<id>/`.
-  - Separate item photos and bill photos per material, a profile photo for labourers, a cover photo for houses.
-- Photo viewer: full screen, pinch-zoom, swipe, share, delete, caption.
-- Work detail Photos tab.
+## Phase 4 – Materials, vendors & photos (done)
 
-## Phase 5 – Payments
-- Full Add Payment screen: amount, mode (Cash/UPI/Bank/Cheque), UTR, period covered (week range picker), optional work.
-- Unlimited, ordered payment screenshots/receipts with captions, from gallery multi-select or camera.
-- **Share into the app:** receive `ACTION_SEND` / `ACTION_SEND_MULTIPLE` images (e.g. a GPay/PhonePe screenshot), then choose "Attach to payment / material".
-- Work detail Payments tab; payments with UTR shown in the ledger.
+### Materials
+- **Add/Edit material:**
+  - Two modes, **Item details** or **Total only** (e.g. "Raw material – ₹4,500").
+  - Item details mode: item, brand, quantity, unit (m, ft, kg, bag, piece, box, litre, sq ft, or a custom unit), rate per unit, and a live **Total = qty × rate**. You can type over the total, and "Use qty × rate" switches back.
+  - Shop & bill: shop name, shop phone, purchase date, bill number, paid by (Cash/UPI/Card/Bank/Credit), and a Paid switch. Choosing Credit sets it to unpaid automatically.
+  - Photos: separate **Bill** and **Item photos** strips, then notes.
+- **Autocomplete** for item and brand (from earlier entries) and for shop (from the vendor list). Picking a shop fills in its phone.
+- **Work → Materials tab:**
+  - Materials total, with "Unpaid to shops" shown in red when anything is unpaid.
+  - One card per purchase: brand, qty × rate, date, shop, photo count, an Unpaid tag, and a ⋮ menu (Edit / Duplicate / Delete with undo).
+  - **Duplicate** adds a copy dated today.
+- **Shops & vendors** (under More): list plus add/edit with name, phone, GSTIN and address. Names are unique, and deleting a shop keeps the shop name on its materials.
 
-## Phase 6 – Dashboard & charts
-- House switcher, total spent vs budget, today's labour cost, pending dues to all labourers.
-- Spend-by-work donut chart and last-30-days bar chart, drawn with Compose Canvas.
-- Recent activity feed.
-- Quick-add FAB: Material / Attendance / Payment.
-- Budget alerts when a work crosses 80% or 100% of its budget.
-- House totals by work, by category (material vs labour), by month, by labourer and by vendor.
-- Search across everything: labourer, item, brand, shop, notes.
+### Photos
+- **Adding a photo:** a sheet offers **Take photo** (CameraX, full screen) or **Choose from gallery** (system Photo Picker, up to 10 at a time).
+  - Only the CAMERA permission is requested, with a friendly prompt and a link to Settings if refused. No storage permission is needed.
+- **Saving:**
+  - Photos are resized to at most 1600 px, saved as JPEG at 80% quality with orientation applied, and the original EXIF date is kept.
+  - They are stored in `filesDir/attachments/<owner>/<id>/`.
+  - Until the form is saved, photos sit in a cache folder. Unsaved leftovers are cleaned up after a day, so abandoned forms leave nothing behind.
+- **Labourer profile photo:** shown on the labour list, attendance sheet and ledger. Tap it in the ledger to view it full screen.
+- **House cover photo:** shown as a banner on the house card.
+- **Work → Photos tab:** a grid of every bill and item photo for that work.
+- **Photo viewer:**
+  - Full screen, swipe between photos, pinch or double-tap to zoom (swiping is paused while zoomed).
+  - Share via the share sheet, edit the caption, delete with a confirmation.
+- Unsaved photos in forms open in a zoomable preview.
+
+### Tests
+- Photo sync: pending files are moved, order is kept, captions update, removed photos are deleted, and the single profile/cover photo can be replaced or cleared.
+- Material totals: qty × rate, typed-over total, and total-only entries.
+- Emulator UI testing:
+  - Shops & vendors master CRUD under More tab (empty state, create with name/phone/GSTIN/address, and list verification).
+  - Material entry (Item details mode): item, brand, qty, unit dropdown (bag), rate, live total auto-calculation (50 × ₹380 = ₹19,000), vendor link, phone, bill number, UPI payment mode.
+  - Material entry (Total only mode): item, total amount, Credit payment mode with automatic unpaid switch toggle.
+  - Work Materials summary & card verification: material totals, red "Unpaid to shops: ₹4,500" warning, unpaid badge on card.
+  - Duplicate material action and Delete confirmation dialog with 10-second Undo snackbar and restore test.
+  - Work Photos tab empty state and Home dashboard materials/labour breakdown live recalculation.
+
+## Phase 5 – Payments (done)
+
+### Payments & receipts
+- **Full Add/Edit Payment screen:**
+  - Amount with live validation (`MoneyField`).
+  - Labourer selection dropdown when adding standalone, or fixed recipient header when opening from a labourer ledger.
+  - Payment type: single-choice segmented button for **Wages** vs **Advance**.
+  - Payment mode chips: **Cash**, **UPI**, **Bank**, **Cheque**.
+  - Dynamic **Reference / UTR number** input shown whenever mode is non-cash (UPI, Bank, Cheque).
+  - Date field defaulting to today, with date picker.
+  - Optional Work link dropdown (auto-fills when adding from a work, or can be left unlinked).
+  - **Period covered (week range picker):**
+    - Quick chips for **This week** (Monday–Sunday) and **Last week**.
+    - **Custom** mode with explicit From and To date pickers.
+    - One-tap **Clear** button and formatted range text display.
+  - **Receipts & screenshots:** unlimited ordered attachments (`PhotoStrip`) with zoomable photo preview, removal, and camera or photo picker integration (`AddPhotoSheet`).
+  - Notes field.
+  - Delete action with confirmation dialog and 10-second Undo delete manager.
+- **Share into the app (`ACTION_SEND` & `ACTION_SEND_MULTIPLE`):**
+  - AndroidManifest configured with `singleTop` launch mode and image intent filters.
+  - `ShareIntentParser` extracts single or multiple shared image URIs from `EXTRA_STREAM` or `ClipData`.
+  - `ShareImportSheet` bottom sheet automatically opens when images are shared into the app (e.g. from GPay, PhonePe, Paytm, or Gallery):
+    - Multi-image preview thumbnail strip.
+    - **Attach to payment**: links to a labourer, imports photos into `SharedPhotoHolder`, and opens the Payment form pre-populated with receipts.
+    - **Attach to material**: links to a work in the project, imports photos, and opens the Material form pre-populated with bill photos.
+- **Work detail – Payments tab:**
+  - Payments total summary card with total paid on that work.
+  - **Add payment** button directly linking the payment to that work.
+  - Payment cards displaying: labourer name, date, type (Wages/Advance), mode (UPI/Cash/Bank/Cheque), UTR reference, period covered range tag, photo count icon badge, and overflow menu (Edit, Delete with 10s undo).
+- **Labourer ledger:**
+  - Day-by-day table shows payments with Date, Type, Mode, UTR reference, Period covered tag, photo count icon badge, and paid amount.
+  - Real-time recalculation of Days, Earned, Paid, and Pending / Advance in the summary footer.
+
+### Tests
+- `PaymentRepositoryTest`: Room + AttachmentRepository integration for `saveWithPhotos`, photo synchronisation, photo count observations, and update/deletion of attachments.
+- `ShareIntentParserTest`: single image `ACTION_SEND`, multi-image `ACTION_SEND_MULTIPLE`, and `ClipData` fallback parsing.
+- Emulator UI testing:
+  - Work detail Payments tab summary card and payment list.
+  - Creating a new payment from Work detail: labourer selection, ₹1,500 amount, UPI mode, dynamic UTR entry (`UPI12345678`), "This week" period picker range auto-calculation.
+  - Saved payment verified in Work Payments tab (total recalculated to ₹1,700).
+  - Payment verified in Labourer Ledger with UTR, period covered tag, and updated summary totals.
+  - Delete with Confirmation dialog and 10-second Undo snackbar test.
+  - External image share (`ACTION_SEND`) triggered via adb intent broadcast, successfully opening `ShareImportSheet` with thumbnails, "Attach to payment", and "Attach to material".
+- All 68 unit and database tests passing.
+
+## Phase 6 – Dashboard & charts (done)
+
+### Dashboard & Metrics
+- **House switcher & Spend Overview:**
+  - Live house switcher in the top bar.
+  - Spend overview card: Grand total spent, spent vs budget progress bar, percentage used, Materials vs Labour split, and remaining budget balance.
+  - Live metric card: **Today's labour cost** (sum of base pay + overtime for today across all works).
+  - Live metric card: **Labour dues** (total pending dues to all labourers across the project; displays "No pending dues" in green when settled).
+- **Budget Alerts:**
+  - Dynamic alerts at the top of the dashboard when any work nears (≥80%) or exceeds (>100%) its budget.
+  - Prominent alert banners with error icon, work name, percentage, and spent vs budget numbers.
+  - Tapping an alert navigates directly to that work's details.
+
+### Visual Charts (Pure Compose Canvas)
+- **Spend-by-work Donut Chart:**
+  - Pure Compose Canvas custom-drawn donut chart with sweep angle animations.
+  - Center cutout displaying Grand Total with currency formatting.
+  - Color-coded legend with work names and spend percentages.
+- **30-Day Daily Spend Bar Chart:**
+  - Pure Compose Canvas interactive bar chart plotting combined material + labour spend for the last 30 days.
+  - Interactive selection: tapping any bar reveals an exact date & amount pill.
+  - Today's bar highlighted in primary color, with 3-point date markers (start, middle, today).
+
+### Quick-Add FAB & Recent Activity Feed
+- **Speed-Dial Quick-Add FAB:**
+  - Floating Action Button with rotating plus/close icon and semi-transparent scrim.
+  - Speed-dial options for **Material**, **Attendance**, and **Payment**.
+  - Seamless navigation to pre-filled edit routes with the first active work ID.
+- **Recent Activity Feed:**
+  - Chronological feed combining recent materials, attendance entries, and payments.
+  - Visual icons for material (store), attendance (groups), and payment (wallet).
+  - Tapping an item navigates directly to its respective editor or ledger.
+
+### House Breakdown Screen (`/breakdown`)
+- Accessible from the Home screen's "House breakdown" banner card.
+- 5 comprehensive breakdown tabs using `PrimaryScrollableTabRow`:
+  1. **By work:** Work name, total spend, material vs labour spend, budget progress indicator, and budget status.
+  2. **By category:** Total spent, material vs labour horizontal ratio bar, materials total, labour total, and unpaid shop amount highlight.
+  3. **By month:** Chronological monthly breakdown with total, material, and labour spend.
+  4. **By labourer:** Days worked, earned amount, and color-coded balance state (Due / Advance / Settled). Tapping opens labourer ledger.
+  5. **By vendor:** Shop name, purchase count, total purchase amount, and unpaid amount indicator. Tapping opens vendor editor.
+
+### Global Search Screen (`/search`)
+- Real-time search across the entire app accessible via the Search icon in the Home top bar.
+- Auto-focused search input with 150ms query debounce.
+- Cross-entity search sections:
+  - **Works:** Name and notes matching.
+  - **Labourers:** Name, phone, and role matching.
+  - **Materials:** Item name, brand, shop name, and notes matching.
+  - **Payments:** Reference and notes matching.
+  - **Vendors:** Shop name, phone, address, and GSTIN matching.
+- Instant navigation from search result cards directly to the target item.
+
+### Tests & Verification
+- Unit & DAO tests: `ProjectWorkMaterialDaoTest` testing daily spend aggregation and search across materials and works.
+- All 70 unit and database tests passing (`:app:testDebugUnitTest`).
+- Emulator UI testing:
+  - Dashboard verified with live metrics (Spend overview, Today's labour ₹600, Labour dues).
+  - Donut chart and 30-day interactive daily spend bar chart verified.
+  - Quick-add speed dial FAB verified (opens Material, Attendance, Payment with scrim).
+  - House breakdown screen verified across all 5 tabs (By work, By category, By month, By labourer, By vendor).
+  - Real-time search verified: queried "sand", returned River Sand material and Gupta Sand Supplier vendor, with instant navigation to Material edit screen.
+  - Budget alert verified: editing work budget to ₹20,000 triggered the "Over budget: Brick masonry is at 120% (₹24,100 of ₹20,000)" alert banner.
 
 ## Phase 7 – Reports (PDF + CSV)
 - Filters: date range, work, labourer.

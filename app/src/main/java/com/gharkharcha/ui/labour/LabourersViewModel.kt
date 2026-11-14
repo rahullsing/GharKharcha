@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.gharkharcha.data.entity.LabourerEntity
 import com.gharkharcha.data.entity.Skill
 import com.gharkharcha.data.repo.LabourerRepository
+import com.gharkharcha.data.entity.OwnerType
+import com.gharkharcha.data.repo.AttachmentRepository
 import com.gharkharcha.data.repo.LedgerRepository
 import com.gharkharcha.data.repo.WorkRepository
 import com.gharkharcha.domain.model.LabourSummary
@@ -33,7 +35,7 @@ sealed interface LabourerFilter {
     data class BySkill(val skill: Skill) : LabourerFilter
 }
 
-data class LabourerRow(val labourer: LabourerEntity, val summary: LabourSummary?)
+data class LabourerRow(val labourer: LabourerEntity, val summary: LabourSummary?, val photoPath: String? = null)
 
 data class LabourersUi(
     /** False when there is no house yet (attendance needs a house). */
@@ -55,6 +57,7 @@ class LabourersViewModel @Inject constructor(
     currentProject: CurrentProjectUseCase,
     works: WorkRepository,
     undo: UndoDeleteManager,
+    attachments: AttachmentRepository,
 ) : ViewModel() {
     private val retry = MutableStateFlow(0)
 
@@ -72,15 +75,15 @@ class LabourersViewModel @Inject constructor(
 
     val state: StateFlow<LoadState<LabourersUi>> = retryableLoad(retry) {
         combine(
-            combine(labourers.observeAll(), undo.pending) { list, pending ->
-                list.filter { UndoDeleteManager.labourerKey(it.id) !in pending }
+            combine(labourers.observeAll(), undo.pending, attachments.observeFirstPhotos(OwnerType.LABOURER)) { list, pending, photos ->
+                list.filter { UndoDeleteManager.labourerKey(it.id) !in pending } to photos
             },
             ledger.observeSummaries(),
             hasWorks,
             query,
             filter,
-        ) { all, summaries, worksFlag, q, f ->
-            val rows = all.filter { matches(it, q, f) }.map { LabourerRow(it, summaries[it.id]) }
+        ) { (all, photos), summaries, worksFlag, q, f ->
+            val rows = all.filter { matches(it, q, f) }.map { LabourerRow(it, summaries[it.id], photos[it.id]) }
             LabourersUi(
                 hasProject = worksFlag != null,
                 hasWorks = worksFlag == true,

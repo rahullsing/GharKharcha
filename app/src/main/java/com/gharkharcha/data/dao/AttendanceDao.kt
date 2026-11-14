@@ -69,6 +69,40 @@ interface AttendanceDao {
     )
     fun observeDayCost(projectId: Long, date: LocalDate): Flow<Long>
 
+    @Query(
+        """
+        SELECT a.date AS date, SUM(a.base_pay_paise + a.overtime_pay_paise) AS totalPaise
+        FROM attendance a
+        INNER JOIN works w ON a.work_id = w.id
+        WHERE w.project_id = :projectId AND a.date >= :sinceDate
+        GROUP BY a.date
+        """,
+    )
+    fun observeDailySpend(projectId: Long, sinceDate: LocalDate): Flow<List<DailySpendRow>>
+
+    @Query(
+        """
+        SELECT a.date AS date, SUM(a.base_pay_paise + a.overtime_pay_paise) AS totalPaise
+        FROM attendance a
+        INNER JOIN works w ON a.work_id = w.id
+        WHERE w.project_id = :projectId
+        GROUP BY a.date
+        """,
+    )
+    fun observeAllDailySpend(projectId: Long): Flow<List<DailySpendRow>>
+
+    @Query(
+        """
+        SELECT a.*, w.name AS workName, l.name AS labourerName FROM attendance a
+        INNER JOIN works w ON w.id = a.work_id
+        INNER JOIN labourers l ON l.id = a.labourer_id
+        WHERE w.project_id = :projectId
+        ORDER BY a.date DESC, a.id DESC
+        LIMIT :limit
+        """,
+    )
+    fun observeRecentForProject(projectId: Long, limit: Int = 10): Flow<List<AttendanceActivityRow>>
+
     @Insert
     suspend fun insert(entry: AttendanceEntity): Long
 

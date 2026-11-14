@@ -25,10 +25,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gharkharcha.R
 import com.gharkharcha.ui.components.LocalSnackbarHostState
 import com.gharkharcha.ui.navigation.AppNavHost
+import com.gharkharcha.ui.navigation.MaterialEditRoute
+import com.gharkharcha.ui.navigation.PaymentEditRoute
 import com.gharkharcha.ui.navigation.TopLevelDestination
+import com.gharkharcha.ui.share.ShareImportSheet
 
 @Composable
 fun GharKharchaAppUi(
@@ -80,6 +84,22 @@ fun GharKharchaAppUi(
             },
         ) {
             AppNavHost(navController = navController, onNavigateTopLevel = { navController.navigateToTopLevel(it) })
+        }
+
+        val sharedUris by viewModel.sharedUris.collectAsStateWithLifecycle()
+        if (sharedUris.isNotEmpty()) {
+            ShareImportSheet(
+                uris = sharedUris,
+                onDismiss = viewModel::clearSharedUris,
+                onNavigateToPayment = { labourerId, workId ->
+                    viewModel.clearSharedUris()
+                    navController.navigate(PaymentEditRoute(labourerId = labourerId, workId = workId))
+                },
+                onNavigateToMaterial = { workId ->
+                    viewModel.clearSharedUris()
+                    navController.navigate(MaterialEditRoute(workId = workId))
+                },
+            )
         }
     }
 }

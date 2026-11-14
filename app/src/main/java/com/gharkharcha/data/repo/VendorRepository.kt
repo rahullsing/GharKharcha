@@ -14,6 +14,8 @@ class VendorRepository @Inject constructor(
 
     suspend fun suggest(query: String): List<VendorEntity> = dao.suggest(query.trim())
 
+    suspend fun get(id: Long): VendorEntity? = dao.get(id)
+
     suspend fun save(vendor: VendorEntity): Long =
         if (vendor.id == 0L) dao.insert(vendor) else vendor.id.also { dao.update(vendor) }
 

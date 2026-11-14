@@ -17,6 +17,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import coil3.compose.AsyncImage
+import java.io.File
 import com.gharkharcha.R
 import com.gharkharcha.data.entity.LabourerEntity
 import com.gharkharcha.domain.model.BalanceState
@@ -24,9 +28,18 @@ import com.gharkharcha.domain.model.LabourSummary
 import com.gharkharcha.ui.theme.LocalExtendedColors
 import com.gharkharcha.util.Money
 
-/** Initials avatar (profile photos arrive with the photo feature). */
+/** Profile photo when there is one, otherwise the labourer's initials. */
 @Composable
-fun LabourerAvatar(name: String, modifier: Modifier = Modifier, size: Dp = 44.dp) {
+fun LabourerAvatar(name: String, modifier: Modifier = Modifier, size: Dp = 44.dp, photoPath: String? = null) {
+    if (photoPath != null) {
+        AsyncImage(
+            model = File(photoPath),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = modifier.size(size).clip(CircleShape).background(MaterialTheme.colorScheme.primaryContainer),
+        )
+        return
+    }
     val initials = name.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
         .take(2).joinToString("") { it.first().uppercase() }
     Box(

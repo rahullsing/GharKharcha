@@ -40,6 +40,17 @@ interface WorkDao {
     )
     fun observeSpend(workId: Long): Flow<WorkSpendRow>
 
+    @Query(
+        """
+        SELECT * FROM works
+        WHERE (:projectId IS NULL OR project_id = :projectId)
+          AND (name LIKE '%' || :query || '%'
+               OR notes LIKE '%' || :query || '%')
+        ORDER BY created_at ASC
+        """,
+    )
+    fun search(projectId: Long? = null, query: String): Flow<List<WorkEntity>>
+
     @Insert
     suspend fun insert(work: WorkEntity): Long
 

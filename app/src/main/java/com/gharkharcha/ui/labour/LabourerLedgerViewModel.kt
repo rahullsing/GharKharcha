@@ -11,6 +11,8 @@ import com.gharkharcha.data.entity.PaymentEntity
 import com.gharkharcha.data.prefs.UserPreferencesRepository
 import com.gharkharcha.data.repo.AttendanceRepository
 import com.gharkharcha.data.repo.LabourerRepository
+import com.gharkharcha.data.entity.OwnerType
+import com.gharkharcha.data.repo.AttachmentRepository
 import com.gharkharcha.data.repo.PaymentRepository
 import com.gharkharcha.domain.calc.LedgerCalculator
 import com.gharkharcha.domain.model.LabourSummary
@@ -39,7 +41,7 @@ sealed interface LedgerLine {
         override val date: LocalDate get() = item.attendance.date
     }
 
-    data class Payment(val payment: PaymentEntity) : LedgerLine {
+    data class Payment(val payment: PaymentEntity, val photoCount: Int = 0) : LedgerLine {
         override val date: LocalDate get() = payment.date
     }
 }
@@ -48,6 +50,7 @@ data class LedgerUi(
     val labourer: LabourerEntity,
     val lines: List<LedgerLine>,
     val summary: LabourSummary,
+    val photoPath: String? = null,
 )
 
 /** Delete flow outcomes the screen reacts to. */
@@ -61,6 +64,7 @@ class LabourerLedgerViewModel @Inject constructor(
     payments: PaymentRepository,
     prefs: UserPreferencesRepository,
     private val undo: UndoDeleteManager,
+    attachments: AttachmentRepository,
 ) : ViewModel() {
     private val labourerId = savedStateHandle.toRoute<LabourerLedgerRoute>().labourerId
     private val retry = MutableStateFlow(0)
@@ -74,21 +78,31 @@ class LabourerLedgerViewModel @Inject constructor(
 
     /** Ready(null) = labourer not found. */
     val state: StateFlow<LoadState<LedgerUi?>> = retryableLoad(retry) {
+        val paymentsWithPhotos = combine(
+            payments.observeForLabourer(labourerId),
+            attachments.observeLabourerPaymentPhotoCounts(labourerId),
+            undo.pending,
+        ) { list, counts, pending ->
+            list.filter { UndoDeleteManager.paymentKey(it.id) !in pending }
+                .map { p -> p to (counts[p.id] ?: 0) }
+        }
+
         combine(
             labourers.observe(labourerId),
             attendance.observeForLabourer(labourerId),
-            combine(payments.observeForLabourer(labourerId), undo.pending) { list, pending ->
-                list.filter { UndoDeleteManager.paymentKey(it.id) !in pending }
-            },
+            paymentsWithPhotos,
             prefs.hoursPerDay,
-        ) { labourer, days, paid, hpd ->
+            attachments.observeFor(OwnerType.LABOURER, labourerId),
+        ) { labourer, days, paidWithPhotos, hpd, photos ->
             labourer ?: return@combine null
-            val lines = days.map { LedgerLine.Day(it) } + paid.map { LedgerLine.Payment(it) }
+            val paid = paidWithPhotos.map { it.first }
+            val lines = days.map { LedgerLine.Day(it) } + paidWithPhotos.map { LedgerLine.Payment(it.first, it.second) }
             LedgerUi(
                 labourer = labourer,
                 // Newest first; on the same day the work comes before the money.
                 lines = lines.sortedWith(compareByDescending<LedgerLine> { it.date }.thenBy { if (it is LedgerLine.Day) 0 else 1 }),
                 summary = LedgerCalculator.summarize(days.map { it.attendance }, paid, hpd),
+                photoPath = photos.firstOrNull()?.let { attachments.fileOf(it).absolutePath },
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LoadState.Loading)

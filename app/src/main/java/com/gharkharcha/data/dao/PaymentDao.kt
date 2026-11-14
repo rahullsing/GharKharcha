@@ -28,6 +28,41 @@ interface PaymentDao {
     @Query("SELECT * FROM payments WHERE id = :id")
     suspend fun get(id: Long): PaymentEntity?
 
+    @Query(
+        """
+        SELECT * FROM payments
+        WHERE project_id = :projectId
+        ORDER BY date DESC, id DESC
+        LIMIT :limit
+        """,
+    )
+    fun observeRecentForProject(projectId: Long, limit: Int = 10): Flow<List<PaymentEntity>>
+
+    @Query(
+        """
+        SELECT p.* FROM payments p
+        INNER JOIN labourers l ON p.labourer_id = l.id
+        WHERE p.project_id = :projectId
+          AND (l.name LIKE '%' || :query || '%'
+               OR p.reference LIKE '%' || :query || '%'
+               OR p.notes LIKE '%' || :query || '%')
+        ORDER BY p.date DESC
+        """,
+    )
+    fun search(projectId: Long, query: String): Flow<List<PaymentEntity>>
+
+    @Query(
+        """
+        SELECT p.* FROM payments p
+        INNER JOIN labourers l ON p.labourer_id = l.id
+        WHERE l.name LIKE '%' || :query || '%'
+           OR p.reference LIKE '%' || :query || '%'
+           OR p.notes LIKE '%' || :query || '%'
+        ORDER BY p.date DESC
+        """,
+    )
+    fun searchAll(query: String): Flow<List<PaymentEntity>>
+
     /** Per-labourer payment totals; null filters mean "all". */
     @Query(
         """

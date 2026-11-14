@@ -30,6 +30,52 @@ interface AttachmentDao {
     @Query("SELECT * FROM attachments WHERE id = :id")
     suspend fun get(id: Long): AttachmentEntity?
 
+    /** Photos of a work, its materials and its payments, newest first (work Photos tab / viewer). */
+    @Query(
+        """
+        SELECT * FROM attachments
+        WHERE (owner_type = 'WORK' AND owner_id = :workId)
+           OR (owner_type = 'MATERIAL' AND owner_id IN (SELECT id FROM materials WHERE work_id = :workId))
+           OR (owner_type = 'PAYMENT' AND owner_id IN (SELECT id FROM payments WHERE work_id = :workId))
+        ORDER BY created_at DESC, id DESC
+        """,
+    )
+    fun observeForWorkTree(workId: Long): Flow<List<AttachmentEntity>>
+
+    /** All attachments of one owner type, in display order (e.g. labourer profile photos). */
+    @Query("SELECT * FROM attachments WHERE owner_type = :ownerType ORDER BY owner_id, sort_order, id")
+    fun observeByOwnerType(ownerType: OwnerType): Flow<List<AttachmentEntity>>
+
+    /** Photo count per material of a work. */
+    @Query(
+        """
+        SELECT owner_id AS ownerId, COUNT(*) AS count FROM attachments
+        WHERE owner_type = 'MATERIAL' AND owner_id IN (SELECT id FROM materials WHERE work_id = :workId)
+        GROUP BY owner_id
+        """,
+    )
+    fun observeMaterialPhotoCounts(workId: Long): Flow<List<OwnerCount>>
+
+    /** Photo count per payment of a work. */
+    @Query(
+        """
+        SELECT owner_id AS ownerId, COUNT(*) AS count FROM attachments
+        WHERE owner_type = 'PAYMENT' AND owner_id IN (SELECT id FROM payments WHERE work_id = :workId)
+        GROUP BY owner_id
+        """,
+    )
+    fun observePaymentPhotoCounts(workId: Long): Flow<List<OwnerCount>>
+
+    /** Photo count per payment of a labourer. */
+    @Query(
+        """
+        SELECT owner_id AS ownerId, COUNT(*) AS count FROM attachments
+        WHERE owner_type = 'PAYMENT' AND owner_id IN (SELECT id FROM payments WHERE labourer_id = :labourerId)
+        GROUP BY owner_id
+        """,
+    )
+    fun observeLabourerPaymentPhotoCounts(labourerId: Long): Flow<List<OwnerCount>>
+
     /** Attachments of a work and of every material under it (payments survive work deletion). */
     @Query(
         """

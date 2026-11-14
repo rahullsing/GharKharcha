@@ -6,6 +6,8 @@ import com.gharkharcha.R
 import com.gharkharcha.data.dao.ProjectSummaryRow
 import com.gharkharcha.data.entity.ProjectEntity
 import com.gharkharcha.data.repo.ProjectRepository
+import com.gharkharcha.data.entity.OwnerType
+import com.gharkharcha.data.repo.AttachmentRepository
 import com.gharkharcha.domain.usecase.CurrentProjectUseCase
 import com.gharkharcha.ui.common.LoadState
 import com.gharkharcha.ui.common.UiText
@@ -24,6 +26,8 @@ import javax.inject.Inject
 data class ProjectsUi(
     val projects: List<ProjectSummaryRow>,
     val currentId: Long?,
+    /** Cover photo path per project id. */
+    val covers: Map<Long, String> = emptyMap(),
 )
 
 @HiltViewModel
@@ -31,14 +35,21 @@ class ProjectsViewModel @Inject constructor(
     private val projects: ProjectRepository,
     private val currentProject: CurrentProjectUseCase,
     private val undo: UndoDeleteManager,
+    attachments: AttachmentRepository,
 ) : ViewModel() {
     private val retry = MutableStateFlow(0)
 
     val state: StateFlow<LoadState<ProjectsUi>> = retryableLoad(retry) {
-        combine(projects.observeSummaries(), currentProject.state, undo.pending) { rows, current, pending ->
+        combine(
+            projects.observeSummaries(),
+            currentProject.state,
+            undo.pending,
+            attachments.observeFirstPhotos(OwnerType.PROJECT),
+        ) { rows, current, pending, covers ->
             ProjectsUi(
                 projects = rows.filter { UndoDeleteManager.projectKey(it.project.id) !in pending },
                 currentId = current.current?.id,
+                covers = covers,
             )
         }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LoadState.Loading)

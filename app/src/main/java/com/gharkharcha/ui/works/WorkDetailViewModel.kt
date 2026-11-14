@@ -14,6 +14,17 @@ import com.gharkharcha.data.repo.PaymentRepository
 import com.gharkharcha.data.repo.WorkRepository
 import com.gharkharcha.domain.model.LabourSummary
 import kotlinx.coroutines.flow.combine
+import com.gharkharcha.data.entity.AttachmentEntity
+import com.gharkharcha.data.entity.MaterialEntity
+import com.gharkharcha.data.repo.AttachmentRepository
+import com.gharkharcha.data.repo.MaterialRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
+import java.io.File
+import java.time.LocalDate
 import com.gharkharcha.domain.model.WorkWithSpend
 import com.gharkharcha.ui.common.LoadState
 import com.gharkharcha.ui.common.UiText
@@ -31,7 +42,11 @@ import javax.inject.Inject
 /** One labourer's totals on this work. */
 data class WorkLabourRow(val labourer: LabourerEntity, val summary: LabourSummary)
 
-data class WorkPaymentRow(val payment: PaymentEntity, val labourerName: String)
+data class WorkPaymentRow(val payment: PaymentEntity, val labourerName: String, val photoCount: Int = 0)
+
+data class WorkMaterialRow(val material: MaterialEntity, val photoCount: Int)
+
+data class WorkPhoto(val attachment: AttachmentEntity, val file: File)
 
 @HiltViewModel
 class WorkDetailViewModel @Inject constructor(
@@ -40,7 +55,9 @@ class WorkDetailViewModel @Inject constructor(
     private val undo: UndoDeleteManager,
     labourers: LabourerRepository,
     ledger: LedgerRepository,
-    payments: PaymentRepository,
+    private val paymentRepo: PaymentRepository,
+    private val materials: MaterialRepository,
+    attachments: AttachmentRepository,
 ) : ViewModel() {
     private val workId = savedStateHandle.toRoute<WorkDetailRoute>().workId
     private val retry = MutableStateFlow(0)
@@ -57,12 +74,51 @@ class WorkDetailViewModel @Inject constructor(
                 .sortedByDescending { it.summary.earnedPaise }
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    val payments: StateFlow<List<WorkPaymentRow>> =
-        combine(payments.observeForWork(workId), labourers.observeAll(), undo.pending) { list, people, pending ->
-            val names = people.associate { it.id to it.name }
-            list.filter { UndoDeleteManager.paymentKey(it.id) !in pending }
-                .map { WorkPaymentRow(it, names[it.labourerId].orEmpty()) }
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+    val payments: StateFlow<List<WorkPaymentRow>> = combine(
+        paymentRepo.observeForWork(workId),
+        labourers.observeAll(),
+        attachments.observePaymentPhotoCounts(workId),
+        undo.pending,
+    ) { list, people, photoCounts, pending ->
+        val names = people.associate { it.id to it.name }
+        list.filter { UndoDeleteManager.paymentKey(it.id) !in pending }
+            .map { WorkPaymentRow(it, names[it.labourerId].orEmpty(), photoCounts[it.id] ?: 0) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val materialRows: StateFlow<List<WorkMaterialRow>> = combine(
+        materials.observeByWork(workId),
+        attachments.observeMaterialPhotoCounts(workId),
+        undo.pending,
+    ) { list, counts, pending ->
+        list.filter { UndoDeleteManager.materialKey(it.id) !in pending }
+            .map { WorkMaterialRow(it, counts[it.id] ?: 0) }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val photos: StateFlow<List<WorkPhoto>> = attachments.observeForWorkTree(workId)
+        .map { list -> list.map { WorkPhoto(it, attachments.fileOf(it)) } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    private val messageChannel = Channel<UiText>(Channel.BUFFERED)
+    val messages: Flow<UiText> = messageChannel.receiveAsFlow()
+
+    fun duplicateMaterial(material: MaterialEntity) {
+        viewModelScope.launch {
+            materials.duplicate(material, LocalDate.now())
+            messageChannel.send(UiText.of(R.string.material_duplicated))
+        }
+    }
+
+    fun deleteMaterial(material: MaterialEntity) {
+        undo.schedule(UndoDeleteManager.materialKey(material.id), UiText.of(R.string.material_deleted, material.itemName)) {
+            materials.delete(material)
+        }
+    }
+
+    fun deletePayment(payment: PaymentEntity) {
+        undo.schedule(UndoDeleteManager.paymentKey(payment.id), UiText.of(R.string.payment_deleted)) {
+            paymentRepo.delete(payment)
+        }
+    }
 
     fun retry() = retry.update { it + 1 }
 

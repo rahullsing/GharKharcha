@@ -23,6 +23,18 @@ interface VendorDao {
     @Query("SELECT * FROM vendors WHERE id = :id")
     suspend fun get(id: Long): VendorEntity?
 
+    @Query(
+        """
+        SELECT * FROM vendors
+        WHERE name LIKE '%' || :query || '%'
+           OR phone LIKE '%' || :query || '%'
+           OR gstin LIKE '%' || :query || '%'
+           OR address LIKE '%' || :query || '%'
+        ORDER BY name
+        """,
+    )
+    fun search(query: String): Flow<List<VendorEntity>>
+
     /** Returns -1 when a vendor with the same name (case-insensitive) already exists. */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(vendor: VendorEntity): Long

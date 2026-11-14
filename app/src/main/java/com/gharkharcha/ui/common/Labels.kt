@@ -6,6 +6,8 @@ import androidx.compose.ui.res.stringResource
 import com.gharkharcha.R
 import com.gharkharcha.data.entity.AttendanceStatus
 import com.gharkharcha.data.entity.LabourerEntity
+import com.gharkharcha.data.entity.MaterialPaymentMode
+import com.gharkharcha.data.entity.MaterialUnit
 import com.gharkharcha.data.entity.PaymentMode
 import com.gharkharcha.data.entity.PaymentType
 import com.gharkharcha.data.entity.Skill
@@ -84,6 +86,38 @@ val PaymentMode.labelRes: Int
         PaymentMode.UPI -> R.string.payment_mode_upi
         PaymentMode.BANK -> R.string.payment_mode_bank
         PaymentMode.CHEQUE -> R.string.payment_mode_cheque
+    }
+
+@get:StringRes
+val MaterialUnit.labelRes: Int
+    get() = when (this) {
+        MaterialUnit.METRE -> R.string.unit_metre
+        MaterialUnit.FEET -> R.string.unit_feet
+        MaterialUnit.KG -> R.string.unit_kg
+        MaterialUnit.BAG -> R.string.unit_bag
+        MaterialUnit.PIECE -> R.string.unit_piece
+        MaterialUnit.BOX -> R.string.unit_box
+        MaterialUnit.LITRE -> R.string.unit_litre
+        MaterialUnit.SQ_FT -> R.string.unit_sq_ft
+        MaterialUnit.CUSTOM -> R.string.unit_custom
+    }
+
+/** Unit as shown next to a quantity; the custom name when the unit is CUSTOM. */
+@Composable
+fun unitLabel(unit: MaterialUnit?, custom: String): String = when {
+    unit == null -> ""
+    unit == MaterialUnit.CUSTOM -> custom
+    else -> stringResource(unit.labelRes)
+}
+
+@get:StringRes
+val MaterialPaymentMode.labelRes: Int
+    get() = when (this) {
+        MaterialPaymentMode.CASH -> R.string.material_mode_cash
+        MaterialPaymentMode.UPI -> R.string.material_mode_upi
+        MaterialPaymentMode.CARD -> R.string.material_mode_card
+        MaterialPaymentMode.BANK -> R.string.material_mode_bank
+        MaterialPaymentMode.CREDIT -> R.string.material_mode_credit
     }
 
 @get:StringRes

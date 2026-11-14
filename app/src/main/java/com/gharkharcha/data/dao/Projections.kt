@@ -50,8 +50,22 @@ data class LabourerPaymentRow(
     fun toTotals() = PaymentTotals(wagePaise = wagePaise, advancePaise = advancePaise)
 }
 
+data class OwnerCount(val ownerId: Long, val count: Int)
+
 /** Attendance entry with its work name, for the labourer ledger. */
 data class AttendanceWithWork(
     @Embedded val attendance: AttendanceEntity,
     val workName: String,
+)
+
+/** Attendance entry with work and labourer name, for recent activity. */
+data class AttendanceActivityRow(
+    @Embedded val attendance: AttendanceEntity,
+    val workName: String,
+    val labourerName: String,
+)
+
+data class DailySpendRow(
+    val date: java.time.LocalDate,
+    val totalPaise: Long,
 )

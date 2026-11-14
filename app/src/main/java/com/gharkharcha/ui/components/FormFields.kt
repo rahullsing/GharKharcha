@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -265,6 +266,62 @@ fun <T> DropdownField(
                     onClick = {
                         onSelect(option)
                         expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
+                )
+            }
+        }
+    }
+}
+
+/**
+ * Free-text field that suggests earlier entries (items, brands, shops) while focused.
+ * Typing keeps full control; picking a suggestion calls [onSuggestion].
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun <T> AutocompleteField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    suggestions: List<T>,
+    suggestionLabel: (T) -> String,
+    onSuggestion: (T) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    placeholder: String? = null,
+    error: String? = null,
+    supportingText: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        capitalization = KeyboardCapitalization.Sentences,
+        imeAction = ImeAction.Next,
+    ),
+) {
+    var focused by remember { mutableStateOf(false) }
+    // Closed by the user until they type again.
+    var dismissed by remember(value) { mutableStateOf(false) }
+    val expanded = focused && !dismissed && suggestions.isNotEmpty()
+    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { if (!it) dismissed = true }, modifier = modifier) {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            label = { Text(label) },
+            placeholder = placeholder?.let { { Text(it) } },
+            isError = error != null,
+            supportingText = (error ?: supportingText)?.let { { Text(it) } },
+            singleLine = true,
+            keyboardOptions = keyboardOptions,
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable)
+                .onFocusChanged { focused = it.isFocused },
+        )
+        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { dismissed = true }) {
+            suggestions.forEach { suggestion ->
+                DropdownMenuItem(
+                    text = { Text(suggestionLabel(suggestion)) },
+                    onClick = {
+                        onSuggestion(suggestion)
+                        dismissed = true
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )

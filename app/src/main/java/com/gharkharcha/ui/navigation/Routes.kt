@@ -26,12 +26,36 @@ import kotlinx.serialization.Serializable
 /** [workId] 0 = pick a default work; [epochDay] null = today. */
 @Serializable data class AttendanceRoute(val workId: Long = 0, val epochDay: Long? = null)
 
-/** [prefillPaise] > 0 pre-fills the amount ("Settle up"). */
+// Materials & vendors
+@Serializable data class MaterialEditRoute(val workId: Long, val materialId: Long = 0)
+@Serializable data object VendorsRoute
+@Serializable data class VendorEditRoute(val vendorId: Long = 0)
+
+// Photos
+@Serializable data object CameraRoute
+
+/**
+ * Full-screen photos of one owner ([ownerType] + [ownerId]) or, when [workId] != 0, of a work and
+ * all its materials. Opens at [startId].
+ */
+@Serializable data class PhotoViewerRoute(
+    val ownerType: String = "",
+    val ownerId: Long = 0,
+    val workId: Long = 0,
+    val startId: Long = 0,
+)
+
+/** [prefillPaise] > 0 pre-fills the amount ("Settle up"); [workId] pre-selects the work. */
 @Serializable data class PaymentEditRoute(
-    val labourerId: Long,
+    val labourerId: Long = 0,
     val paymentId: Long = 0,
     val prefillPaise: Long = 0,
+    val workId: Long = 0,
 )
+
+// Analytics & search
+@Serializable data class HouseBreakdownRoute(val projectId: Long)
+@Serializable data object SearchRoute
 
 enum class TopLevelDestination(
     val route: Any,

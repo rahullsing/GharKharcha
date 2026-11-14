@@ -36,6 +36,8 @@ import com.gharkharcha.domain.model.WorkWithSpend
 import com.gharkharcha.ui.common.LoadState
 import com.gharkharcha.ui.common.labelRes
 import com.gharkharcha.ui.components.BackTopBar
+import com.gharkharcha.ui.components.CollectMessages
+import com.gharkharcha.data.entity.MaterialEntity
 import com.gharkharcha.ui.components.ConfirmDialog
 import com.gharkharcha.ui.components.DetailScaffold
 import com.gharkharcha.ui.components.EmptyState
@@ -62,9 +64,16 @@ fun WorkDetailScreen(
     onMarkAttendance: (workId: Long) -> Unit,
     onOpenLabourer: (Long) -> Unit,
     onOpenPayment: (labourerId: Long, paymentId: Long) -> Unit,
+    onAddPayment: (workId: Long) -> Unit = {},
+    onAddMaterial: (workId: Long) -> Unit,
+    onOpenMaterial: (MaterialEntity) -> Unit,
+    onOpenPhoto: (workId: Long, attachmentId: Long) -> Unit,
     viewModel: WorkDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val materials by viewModel.materialRows.collectAsStateWithLifecycle()
+    val photos by viewModel.photos.collectAsStateWithLifecycle()
+    CollectMessages(viewModel.messages)
     val labour by viewModel.labour.collectAsStateWithLifecycle()
     val payments by viewModel.payments.collectAsStateWithLifecycle()
     val item = (state as? LoadState.Ready)?.data
@@ -111,10 +120,12 @@ fun WorkDetailScreen(
                 }
                 when (WorkTab.entries[tab]) {
                     WorkTab.SUMMARY -> SummaryTab(data)
-                    WorkTab.MATERIALS -> EmptyState(
-                        icon = R.drawable.ic_build,
-                        title = stringResource(R.string.materials_empty_title),
-                        message = stringResource(R.string.materials_empty_message),
+                    WorkTab.MATERIALS -> WorkMaterialsTab(
+                        rows = materials,
+                        onAdd = { onAddMaterial(data.work.id) },
+                        onOpen = onOpenMaterial,
+                        onDuplicate = viewModel::duplicateMaterial,
+                        onDelete = viewModel::deleteMaterial,
                     )
                     WorkTab.LABOUR -> WorkLabourTab(
                         totalPaise = data.totals.labourPaise,
@@ -122,12 +133,13 @@ fun WorkDetailScreen(
                         onMarkAttendance = { onMarkAttendance(data.work.id) },
                         onOpenLabourer = onOpenLabourer,
                     )
-                    WorkTab.PAYMENTS -> WorkPaymentsTab(payments, onOpenPayment)
-                    WorkTab.PHOTOS -> EmptyState(
-                        icon = R.drawable.ic_photo,
-                        title = stringResource(R.string.photos_empty_title),
-                        message = stringResource(R.string.photos_empty_message),
+                    WorkTab.PAYMENTS -> WorkPaymentsTab(
+                        rows = payments,
+                        onAddPayment = { onAddPayment(data.work.id) },
+                        onOpenPayment = onOpenPayment,
+                        onDeletePayment = viewModel::deletePayment,
                     )
+                    WorkTab.PHOTOS -> WorkPhotosTab(photos) { onOpenPhoto(data.work.id, it) }
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.gharkharcha.ui.app
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gharkharcha.data.prefs.UserPreferences
@@ -7,8 +8,10 @@ import com.gharkharcha.data.prefs.UserPreferencesRepository
 import com.gharkharcha.util.UndoDeleteManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
@@ -22,6 +25,19 @@ class AppViewModel @Inject constructor(
         prefs.preferences.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val undoRequests: Flow<UndoDeleteManager.Request> = undoManager.requestFlow
+
+    private val _sharedUris = MutableStateFlow<List<Uri>>(emptyList())
+    val sharedUris: StateFlow<List<Uri>> = _sharedUris.asStateFlow()
+
+    fun onShareReceived(uris: List<Uri>) {
+        if (uris.isNotEmpty()) {
+            _sharedUris.value = uris
+        }
+    }
+
+    fun clearSharedUris() {
+        _sharedUris.value = emptyList()
+    }
 
     fun undo(request: UndoDeleteManager.Request) = undoManager.undo(request)
 
