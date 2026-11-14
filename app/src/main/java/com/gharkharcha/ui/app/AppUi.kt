@@ -50,6 +50,7 @@ import com.gharkharcha.ui.navigation.MaterialEditRoute
 import com.gharkharcha.ui.navigation.PaymentEditRoute
 import com.gharkharcha.ui.navigation.TopLevelDestination
 import com.gharkharcha.ui.share.ShareImportSheet
+import com.gharkharcha.ui.wizard.HelperWizardDialog
 
 @Composable
 fun GharKharchaAppUi(
@@ -100,7 +101,11 @@ fun GharKharchaAppUi(
                 }
             },
         ) {
-            AppNavHost(navController = navController, onNavigateTopLevel = { navController.navigateToTopLevel(it) })
+            AppNavHost(
+                navController = navController,
+                onNavigateTopLevel = { navController.navigateToTopLevel(it) },
+                onOpenWizard = viewModel::openWizard,
+            )
         }
 
         val sharedUris by viewModel.sharedUris.collectAsStateWithLifecycle()
@@ -117,6 +122,14 @@ fun GharKharchaAppUi(
                     navController.navigate(MaterialEditRoute(workId = workId))
                 },
             )
+        }
+
+        val manualWizardOpen by viewModel.manualWizardOpen.collectAsStateWithLifecycle()
+        val prefs by viewModel.preferences.collectAsStateWithLifecycle()
+        val showWizard = manualWizardOpen || (prefs != null && !prefs!!.hasCompletedWizard)
+
+        if (showWizard) {
+            HelperWizardDialog(onDismiss = viewModel::dismissWizard)
         }
 
         val isLocked by viewModel.isLocked.collectAsStateWithLifecycle()

@@ -569,4 +569,35 @@
     <string name="settings_demo_confirm_title">Load sample data?</string>
     <string name="settings_demo_confirm_message">This will add a sample house (\"Dream Villa\"), works, labourers, and expenses so you can test all features.</string>
     <string name="settings_demo_success">Sample data loaded successfully!</string>
+
+    <!-- Helper Wizard -->
+    <string name="wizard_title">How GharKharcha Works</string>
+    <string name="wizard_skip">Skip</string>
+    <string name="wizard_next">Next</string>
+    <string name="wizard_previous">Previous</string>
+    <string name="wizard_finish">Get started</string>
+    <string name="wizard_step_count">Step %1$d of %2$d</string>
+
+    <string name="wizard_step1_title">Track Every Rupee</string>
+    <string name="wizard_step1_subtitle">Your complete house construction budget manager</string>
+    <string name="wizard_step1_desc">Manage multiple houses or renovation projects. Track every expense on materials, labour wages, and contractor payments in one clean, 100% offline dashboard.</string>
+
+    <string name="wizard_step2_title">Works &amp; Budgets</string>
+    <string name="wizard_step2_subtitle">Organize by trade and control costs</string>
+    <string name="wizard_step2_desc">Split construction into works like Brick Masonry, Electrical, Plumbing, and Painting. Set budgets and get timely alerts before expenses exceed limits.</string>
+
+    <string name="wizard_step3_title">Daily Attendance &amp; Labour</string>
+    <string name="wizard_step3_subtitle">One-tap attendance, wages &amp; ledgers</string>
+    <string name="wizard_step3_desc">Add your labourers once. Mark daily attendance (Full, Half, Hourly, Overtime) in one tap with automatic wage calculations. Track advance payments and settlements.</string>
+
+    <string name="wizard_step4_title">Materials, Shops &amp; Bills</string>
+    <string name="wizard_step4_subtitle">Capture bills and track shop credit</string>
+    <string name="wizard_step4_desc">Log cement, steel, bricks, and sand with quantities, units, and rates. Snap photo bills directly with the camera and track unpaid balances owed to shops.</string>
+
+    <string name="wizard_step5_title">Reports, Safety &amp; Backup</string>
+    <string name="wizard_step5_subtitle">PDF statements, biometric lock &amp; zip backup</string>
+    <string name="wizard_step5_desc">Export printable A4 PDF statements and Excel CSV files with signature lines. Keep your data safe with biometric app lock and full zip backup to your device storage.</string>
+
+    <string name="more_wizard_title">App tour &amp; user guide</string>
+    <string name="more_wizard_subtitle">Interactive guide to using all features</string>
 </resources>

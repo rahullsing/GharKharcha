@@ -44,6 +44,7 @@ private fun NavBackStackEntry.cameraResult(): CameraResult {
 fun AppNavHost(
     navController: NavHostController,
     onNavigateTopLevel: (TopLevelDestination) -> Unit,
+    onOpenWizard: () -> Unit = {},
 ) {
     val back: () -> Unit = { navController.popBackStack() }
     val addProject = { navController.navigate(ProjectEditRoute()) }
@@ -99,6 +100,7 @@ fun AppNavHost(
                 onOpenVendors = { navController.navigate(VendorsRoute) },
                 onOpenReports = { navController.navigate(ReportsRoute()) },
                 onOpenSettings = { navController.navigate(SettingsRoute) },
+                onOpenWizard = onOpenWizard,
             )
         }
 

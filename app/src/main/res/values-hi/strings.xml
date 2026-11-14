@@ -565,4 +565,35 @@
     <string name="settings_demo_confirm_title">डेमो डेटा लोड करें?</string>
     <string name="settings_demo_confirm_message">यह आपके ऐप में नमूना घर (सपनों का घर), काम, मज़दूर और खर्च जोड़ देगा ताकि आप सभी सुविधाएँ देख सकें।</string>
     <string name="settings_demo_success">डेमो डेटा सफलतापूर्वक लोड हो गया!</string>
+
+    <!-- Helper Wizard -->
+    <string name="wizard_title">GharKharcha कैसे काम करता है</string>
+    <string name="wizard_skip">छोड़ें</string>
+    <string name="wizard_next">आगे</string>
+    <string name="wizard_previous">पीछे</string>
+    <string name="wizard_finish">शुरू करें</string>
+    <string name="wizard_step_count">चरण %1$d / %2$d</string>
+
+    <string name="wizard_step1_title">हर रुपये का हिसाब रखें</string>
+    <string name="wizard_step1_subtitle">आपके घर निर्माण का संपूर्ण बजट प्रबंधक</string>
+    <string name="wizard_step1_desc">एक या अधिक मकानों व निर्माण कार्यों का प्रबंधन करें। सामग्री, लेबर दिहाड़ी और भुगतानों का पूरा हिसाब 100% सुरक्षित और ऑफ़लाइन डैशबोर्ड में रखें।</string>
+
+    <string name="wizard_step2_title">काम और बजट</string>
+    <string name="wizard_step2_subtitle">कामवार विभाजन और खर्च नियंत्रण</string>
+    <string name="wizard_step2_desc">निर्माण को चिनाई, बिजली, प्लंबिंग और पेंटिंग जैसे कार्यों में विभाजित करें। बजट निर्धारित करें और सीमा पार होने से पहले चेतावनी प्राप्त करें।</string>
+
+    <string name="wizard_step3_title">दैनिक हाज़िरी और लेबर</string>
+    <string name="wizard_step3_subtitle">एक टैप में हाज़िरी, मज़दूरी और बहीखाता</string>
+    <string name="wizard_step3_desc">मज़दूरों को जोड़ें और एक टैप में दैनिक हाज़िरी (पूरी, आधी, प्रति घंटा, ओवरटाइम) लगाएं। दिहाड़ी की स्वचालित गणना और एडवांस भुगतान का स्पष्ट रिकॉर्ड रखें।</string>
+
+    <string name="wizard_step4_title">सामग्री, दुकान और बिल</string>
+    <string name="wizard_step4_subtitle">बिल की फोटो और दुकान का बकाया हिसाब</string>
+    <string name="wizard_step4_desc">सीमेंट, ईंट, रेत और तार की मात्रा और दर दर्ज करें। कैमरे से सीधे बिल की फोटो जोड़ें और दुकानों के बकाया (उधार) का पूरा ध्यान रखें।</string>
+
+    <string name="wizard_step5_title">रिपोर्ट्स, सुरक्षा और बैकअप</string>
+    <string name="wizard_step5_subtitle">PDF विवरण, बायोमेट्रिक लॉक और बैकअप</string>
+    <string name="wizard_step5_desc">हस्ताक्षर सुविधा के साथ प्रिंटेबल A4 PDF और Excel CSV रिपोर्ट बनाएं। बायोमेट्रिक लॉक से ऐप सुरक्षित करें और पूरे डेटा का ज़िप बैकअप लें।</string>
+
+    <string name="more_wizard_title">ऐप टूर और गाइड</string>
+    <string name="more_wizard_subtitle">घर, लेबर और सामग्री प्रबंधन का तरीका समझें</string>
 </resources>

@@ -23,6 +23,7 @@ fun MoreScreen(
     onOpenVendors: () -> Unit,
     onOpenReports: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenWizard: () -> Unit,
 ) {
     TopLevelScaffold(title = { Text(stringResource(R.string.more_title)) }) { padding ->
         Column(
@@ -54,6 +55,12 @@ fun MoreScreen(
                 title = stringResource(R.string.more_settings),
                 subtitle = stringResource(R.string.more_settings_subtitle),
                 onClick = onOpenSettings,
+            )
+            MoreItem(
+                icon = R.drawable.ic_build,
+                title = stringResource(R.string.more_wizard_title),
+                subtitle = stringResource(R.string.more_wizard_subtitle),
+                onClick = onOpenWizard,
             )
         }
     }

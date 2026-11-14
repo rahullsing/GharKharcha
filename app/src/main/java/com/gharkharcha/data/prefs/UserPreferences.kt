@@ -30,6 +30,7 @@ data class UserPreferences(
     val autoBackupEnabled: Boolean = false,
     val lastBackupTimestamp: Long = 0L,
     val backupFolderUri: String? = null,
+    val hasCompletedWizard: Boolean = false,
 )
 
 @Singleton
@@ -51,6 +52,7 @@ class UserPreferencesRepository @Inject constructor(
             autoBackupEnabled = p[AUTO_BACKUP] ?: false,
             lastBackupTimestamp = p[LAST_BACKUP] ?: 0L,
             backupFolderUri = p[BACKUP_URI],
+            hasCompletedWizard = p[COMPLETED_WIZARD] ?: false,
         )
     }.distinctUntilChanged()
 
@@ -104,6 +106,10 @@ class UserPreferencesRepository @Inject constructor(
         dataStore.edit { it[LAST_BACKUP] = timestamp }
     }
 
+    suspend fun setCompletedWizard(completed: Boolean) {
+        dataStore.edit { it[COMPLETED_WIZARD] = completed }
+    }
+
     private companion object {
         val HOURS_PER_DAY = intPreferencesKey("hours_per_day")
         val SELECTED_PROJECT = longPreferencesKey("selected_project_id")
@@ -118,5 +124,6 @@ class UserPreferencesRepository @Inject constructor(
         val AUTO_BACKUP = booleanPreferencesKey("auto_backup_enabled")
         val LAST_BACKUP = longPreferencesKey("last_backup_timestamp")
         val BACKUP_URI = stringPreferencesKey("backup_folder_uri")
+        val COMPLETED_WIZARD = booleanPreferencesKey("has_completed_wizard")
     }
 }
