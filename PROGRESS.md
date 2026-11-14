@@ -9,11 +9,11 @@ App ID `in.gharkharcha` · Kotlin package `com.gharkharcha` · minSdk 35 · targ
 | 2 | Navigation shell, theme, Projects + Works CRUD | ✅ Done (commit `4eca89e`) |
 | 3 | Labourers, attendance sheet, labourer ledger | ✅ Done |
 | 4 | Materials, vendors, photos, attachment viewer | ✅ Done |
-| 5 | Payments with screenshots, share-intent receiver | ⏳ Pending |
-| 6 | Dashboard and charts | ⏳ Pending |
-| 7 | PDF + CSV reports | ⏳ Pending |
-| 8 | Settings, app lock, reminders, backup/restore | ⏳ Pending |
-| 9 | Polish: Hindi, accessibility, sample data, release build | ⏳ Pending |
+| 5 | Payments with screenshots, share-intent receiver | ✅ Done |
+| 6 | Dashboard, charts, house breakdown, global search | ✅ Done |
+| 7 | PDF + CSV reports (A4 printable & Excel export) | ✅ Done |
+| 8 | Settings, app lock, reminders, backup/restore | ✅ Done |
+| 9 | Polish: Hindi localization, helper wizard, sample data, documentation & release APK | ✅ Done |
 
 ---
 
@@ -411,6 +411,23 @@ App ID `in.gharkharcha` · Kotlin package `com.gharkharcha` · minSdk 35 · targ
 - Configured [`app/proguard-rules.pro`](app/proguard-rules.pro) with keep rules for Room Database & Entities, WorkManager workers, Kotlinx Serialization route models, and AndroidX Biometrics.
 - Configured debug signing fallback for release builds in [`app/build.gradle.kts`](app/build.gradle.kts) so shrinked APKs can be installed directly.
 
+### Helper Wizard (App Tour)
+- Implemented `HelperWizardDialog` in `com.gharkharcha.ui.wizard`:
+  - 5-step interactive visual walkthrough explaining core concepts:
+    1. *Track Every Rupee:* Centralized offline house budgeting.
+    2. *Works & Budgets:* Trade category split and budget alerts.
+    3. *Daily Attendance & Labour:* One-tap attendance, wages, and advances.
+    4. *Materials, Shops & Bills:* Bill receipt photo capture and shop credit tracking.
+    5. *Reports, Safety & Backup:* PDF/CSV statements, biometric app lock, and full ZIP backup.
+  - Automatically launches on first app open; re-accessible anytime from More screen -> **App tour & user guide** (ऐप टूर और गाइड).
+  - Animated step transitions, progress dots, and step counters.
+
+### Documentation
+- Created comprehensive [`README.md`](README.md):
+  - Architecture, tech stack, complete 11-module feature inventory, project structure, build & test guide.
+- Created comprehensive [`USER_GUIDE.md`](USER_GUIDE.md):
+  - 12-section user manual with step-by-step instructions for managing houses, budgets, daily attendance, payments, material purchases, report generation, and backup/restore in both English and Hindi.
+
 ### Tests & Verification
 - Unit test suite: `SampleDataSeederTest` verifying complete relational database population and foreign key integrity.
 - All 78 unit tests passing (`:app:testDebugUnitTest`).
@@ -418,10 +435,14 @@ App ID `in.gharkharcha` · Kotlin package `com.gharkharcha` · minSdk 35 · targ
   - Settings -> "Load sample data" verified live.
   - Home dashboard populated with ₹95,900 total spend, donut chart, 30-day spend bar chart, active budget alerts, and recent activities.
   - Hindi localization verified on screen via screenshot.
+  - Helper Wizard 5-step walkthrough verified live with sequential screenshots.
   - 0 crashes, 0 ANRs, 0 memory leaks in logcat.
 
 ### Installable APK
-- Fresh debug APK built and verified:
-  - **Path:** `app/build/outputs/apk/debug/app-debug.apk`
-  - **Size:** ~44.06 MB
+- Freshly assembled and published with clean, professional naming:
+  - **Primary File:** `GharKharcha-v1.0.apk` (Project Root)
+  - **Alternate File:** `apk/GharKharcha-v1.0.apk`
+  - **Build Output:** `app/build/outputs/apk/debug/app-debug.apk`
+  - **Size:** 44.12 MB (46,262,870 bytes)
   - **Application ID:** `in.gharkharcha.debug`
+  - **Gradle task:** `./gradlew :app:publishApk`
